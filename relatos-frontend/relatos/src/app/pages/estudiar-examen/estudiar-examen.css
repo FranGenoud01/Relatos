@@ -1,0 +1,169 @@
+/* --- Contenedor Principal (Consistente con Aportar) --- */
+mat-card.main-card {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 24px;
+  border-radius: 16px;
+  /* El color de fondo y sombra viene de styles.css global */
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* --- Filtros (Grid) --- */
+.filters-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Dos columnas iguales */
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+/* --- Botonera --- */
+.actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-start;
+  /* Alineados a la izquierda para flujo de lectura */
+  margin-bottom: 24px;
+}
+
+/* --- Loading y Mensajes --- */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 32px 0;
+  color: var(--text-secondary, #666);
+}
+
+.message-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.error {
+  background-color: #fee2e2;
+  /* Rojo suave claro */
+  color: #b91c1c;
+  /* Rojo oscuro */
+}
+
+/* Override para Dark Mode manual si el global no lo cubre bien */
+:host-context(.dark-theme) .error {
+  background-color: #450a0a;
+  color: #fca5a5;
+}
+
+/* --- Tarjeta de Resultado (El Examen) --- */
+.result-separator {
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  /* Línea sutil */
+  margin: 24px 0;
+}
+
+:host-context(.dark-theme) .result-separator {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.exam-result-card {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: none !important;
+  /* Quitar sombra extra para que parezca "dentro" */
+  background-color: rgba(0, 0, 0, 0.02);
+  /* Fondo apenas gris para destacar */
+}
+
+/* En modo oscuro, el fondo debe cambiar ligeramente para destacar */
+:host-context(.dark-theme) .exam-result-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.exam-avatar {
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host-context(.dark-theme) .exam-avatar {
+  background-color: #333;
+}
+
+.exam-content {
+  padding: 24px 16px;
+}
+
+.exam-text {
+  white-space: pre-wrap;
+  /* Respeta los saltos de línea del usuario */
+  font-size: 1.1rem;
+  line-height: 1.6;
+  font-family: 'Roboto', sans-serif;
+  /* O la fuente que uses */
+}
+
+.exam-footer {
+  padding: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary, #777);
+}
+
+.tiny-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Animación simple */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .filters-grid {
+    grid-template-columns: 1fr;
+    /* Una columna en móvil */
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,116 @@
+/* src/styles.css */
+
+/* --- Variables Globales --- */
+:root {
+  --bg-body: #f5f5f5;
+  --bg-card: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --input-border: #ccc;
+  --input-bg: #ffffff;
+  --btn-bg: #3f51b5;
+  --btn-text: #ffffff;
+}
+
+/* --- Definición TEMA OSCURO (Se activa con la clase en el body) --- */
+body.dark-theme {
+  --bg-body: #121212;
+  --bg-card: #1e1e1e;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --input-border: #555555;
+  --input-bg: #2b2b2b;
+  --btn-bg: #90caf9;
+  --btn-text: #000000;
+
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+}
+
+/* --- OVERRIDES GLOBALES DE MATERIAL --- */
+/* Esto fuerza a los componentes de Material a usar tus variables */
+
+/* Cards */
+body.dark-theme mat-card {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Inputs y Textareas (Material Design 3 / MDC) */
+body.dark-theme .mat-mdc-text-field-wrapper {
+  background-color: var(--input-bg) !important;
+}
+
+body.dark-theme .mat-mdc-input-element,
+body.dark-theme textarea {
+  color: var(--text-primary) !important;
+  caret-color: var(--text-primary) !important;
+}
+
+/* Labels y Placeholders */
+body.dark-theme .mat-mdc-floating-label,
+body.dark-theme .mat-mdc-select-placeholder {
+  color: var(--text-secondary) !important;
+}
+
+/* Selects y Opciones (El menú desplegable vive en el body, por eso debe ser global) */
+body.dark-theme .mat-mdc-select-value {
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .mat-mdc-select-arrow {
+  color: var(--text-secondary) !important;
+}
+
+body.dark-theme .mat-mdc-option {
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .mat-mdc-option:hover,
+body.dark-theme .mat-mdc-option.mdc-list-item--selected {
+  background-color: #333 !important;
+}
+
+body.dark-theme .mat-mdc-menu-panel,
+body.dark-theme .mat-mdc-select-panel {
+  background-color: var(--bg-card) !important;
+}
+
+/* Datepicker */
+body.dark-theme .mat-datepicker-content {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .mat-calendar-body-label,
+body.dark-theme .mat-calendar-body-cell-content {
+  color: var(--text-primary) !important;
+}
+
+/* Iconos */
+body.dark-theme .mat-icon {
+  color: var(--text-primary) !important;
+}
+
+/* --- Overrides para MAT-TABS en Dark Mode --- */
+
+/* 1. Color del texto de las pestañas inactivas */
+body.dark-theme .mat-mdc-tab .mdc-tab__text-label {
+  color: var(--text-secondary) !important;
+}
+
+/* 2. Color del texto de la pestaña ACTIVA */
+body.dark-theme .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: var(--btn-bg) !important;
+  /* Usamos el azul claro definido en tus variables */
+}
+
+/* 3. Color de la línea de abajo (Ink Bar) */
+body.dark-theme .mat-mdc-tab-indicator .mdc-tab-indicator__content--underline {
+  border-color: var(--btn-bg) !important;
+}
+
+/* 4. Fondo de la cabecera de los tabs (opcional, por si quieres que contraste) */
+body.dark-theme .mat-mdc-tab-header {
+  background-color: var(--bg-body);
+}

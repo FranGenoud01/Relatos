@@ -1,0 +1,72 @@
+<mat-card class="main-card">
+  <div class="card-header">
+    <h2>Estudiar / Leer Relatos</h2>
+    <button mat-icon-button (click)="toggleTheme()" matTooltip="Cambiar tema">
+      <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+  </div>
+
+  <mat-card-content>
+
+    <div class="filters-grid">
+      <mat-form-field appearance="outline" class="filter-item">
+        <mat-label>Materia</mat-label>
+        <mat-select [formControl]="subjectIdCtrl">
+          <mat-option *ngFor="let s of subjects" [value]="s.id">{{ s.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-item">
+        <mat-label>Profesor (opcional)</mat-label>
+        <mat-select [formControl]="teacherIdCtrl">
+          <mat-option [value]="0">Todos</mat-option>
+          <mat-option *ngFor="let t of teachers" [value]="t.id">{{ t.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="getRandomExam()" [disabled]="(loading$ | async)">
+        Traer relato aleatorio
+      </button>
+
+      <button mat-stroked-button (click)="resetSessionForFilter()" [disabled]="(loading$ | async) || !exam$">
+        Reiniciar leídos
+      </button>
+    </div>
+
+    <div class="loading-container" *ngIf="loading$ | async">
+      <mat-spinner diameter="32"></mat-spinner>
+      <span class="loading-text">Buscando relato...</span>
+    </div>
+
+    <div class="message-container error" *ngIf="errorMsg">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMsg }}</span>
+    </div>
+
+    <ng-container *ngIf="exam$ | async as currentExam">
+      <div class="result-separator"></div> <mat-card class="exam-result-card animate-fade-in">
+        <mat-card-header>
+          <div mat-card-avatar class="exam-avatar">
+            <mat-icon>school</mat-icon>
+          </div>
+          <mat-card-title>{{ currentExam.subjects }}</mat-card-title>
+          <mat-card-subtitle>
+            {{ currentExam.date_exam ? (currentExam.date_exam | date:'mediumDate') : 'Fecha desconocida' }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content class="exam-content">
+          <p class="exam-text">{{ currentExam.text }}</p>
+        </mat-card-content>
+
+        <mat-card-footer class="exam-footer">
+          <mat-icon class="tiny-icon">person</mat-icon>
+          <span class="teachers-text">Profesores: {{ currentExam.teachers || 'No registrados' }}</span>
+        </mat-card-footer>
+      </mat-card>
+    </ng-container>
+
+  </mat-card-content>
+</mat-card>
