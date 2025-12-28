@@ -145,15 +145,15 @@ export class EstudiarExamenComponent implements OnInit {
 
   resetSessionForFilter() {
     const subjectId = this.subjectIdCtrl.value;
-    const teacherId = this.teacherIdCtrl.value ?? null;
+    const teacherIdRaw = this.teacherIdCtrl.value ?? 0;
+    const teacherId = teacherIdRaw === 0 ? null : teacherIdRaw;
+
     if (!subjectId) return;
 
     const key = this.filterKey(subjectId, teacherId);
     this.seenByFilter.set(key, []);
+
     this.exam$ = undefined;
     this.errorMsg = null;
-
-    // Opcional: Traer uno nuevo automáticamente al reiniciar
-    // this.getRandomExam();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, Inject } from '@angular/core';
+import { Component, OnInit, Renderer2, Inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -71,7 +71,8 @@ export class AportarExamenComponent implements OnInit {
     private teacherService: TeacherService,
     private examService: ExamService,
     private renderer: Renderer2,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private cd: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       subject_id: this.fb.control<number | null>(null, [Validators.required]),
@@ -140,17 +141,23 @@ export class AportarExamenComponent implements OnInit {
 
     this.teacherService.create(nameRaw).subscribe({
       next: (created) => {
-        this.teachers = [...this.teachers, created];
-        const current = this.form.value.teachersIds || [];
-        this.form.patchValue({
-          teachersIds: [...current, created.id],
-          newTeacherName: '',
-        });
-        this.loading = false;
+        setTimeout(() => {
+          this.teachers = [...this.teachers, created];
+
+          const current = this.form.value.teachersIds || [];
+          this.form.patchValue({
+            teachersIds: [...current, created.id],
+            newTeacherName: '',
+          });
+
+          this.loading = false;
+        }, 0);
       },
       error: () => {
-        this.errorMsg = 'No se pudo crear el profesor';
-        this.loading = false;
+        setTimeout(() => {
+          this.errorMsg = 'No se pudo crear el profesor';
+          this.loading = false;
+        }, 0);
       },
     });
   }
@@ -165,7 +172,7 @@ export class AportarExamenComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
+    this.loading = true; // Activa spinner
 
     // Date picker -> "YYYY-MM-DD"
     const date: Date | null = this.form.value.date_exam ?? null;
@@ -184,22 +191,32 @@ export class AportarExamenComponent implements OnInit {
 
     this.examService.create(payload).subscribe({
       next: () => {
-        this.successMsg = '✅ Relato guardado';
-        this.loading = false;
+        // Usamos setTimeout para salir del ciclo actual
+        setTimeout(() => {
+          this.successMsg = '✅ Relato guardado';
+          this.loading = false;
 
-        // limpiar
-        this.form.reset({
-          subject_id: null,
-          text: '',
-          date_exam: null,
-          teachersIds: [],
-          newTeacherName: '',
-        });
+          this.form.reset({
+            subject_id: null,
+            text: '',
+            date_exam: null,
+            teachersIds: [],
+            newTeacherName: '',
+          });
+
+          // MAGIA AQUÍ: Forzamos a Angular a revisar la vista tras el reset
+          this.cd.detectChanges();
+        }, 0);
       },
       error: (err) => {
-        this.errorMsg =
-          err?.status === 400 ? 'Faltan datos obligatorios' : 'Error al guardar el relato';
-        this.loading = false;
+        setTimeout(() => {
+          this.errorMsg =
+            err?.status === 400 ? 'Faltan datos obligatorios' : 'Error al guardar el relato';
+          this.loading = false;
+
+          // MAGIA AQUÍ TAMBIÉN
+          this.cd.detectChanges();
+        }, 0);
       },
     });
   }

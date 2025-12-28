@@ -11,7 +11,7 @@ export class ExamService {
   getRandom(subjectId: number, teacherId?: number | null, excludeIds: number[] = []) {
     let params = new HttpParams().set('subject_id', String(subjectId));
 
-    if (teacherId) {
+    if (teacherId !== null && teacherId !== undefined) {
       params = params.set('teacher_id', String(teacherId));
     }
 
