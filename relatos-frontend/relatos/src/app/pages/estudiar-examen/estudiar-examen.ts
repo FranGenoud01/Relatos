@@ -1,5 +1,5 @@
-import { Component, OnInit, Renderer2, Inject } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common'; // <--- Importar DOCUMENT
+import { Component, OnInit, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
@@ -58,36 +58,37 @@ export class EstudiarExamenComponent implements OnInit {
     private teacherService: TeacherService,
     private examService: ExamService,
     private renderer: Renderer2,
-    @Inject(DOCUMENT) private document: Document // <--- Inyectar Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
     this.loadData();
 
-    // Lógica de inicio del tema
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      this.isDarkMode = true;
-      this.renderer.addClass(this.document.body, 'dark-theme');
+    // 3. Envolver el localStorage
+    if (isPlatformBrowser(this.platformId)) {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        this.isDarkMode = true;
+        this.renderer.addClass(this.document.body, 'dark-theme');
+      }
     }
-
-    this.subjectIdCtrl.valueChanges.subscribe(() => this.resetView());
-    this.teacherIdCtrl.valueChanges.subscribe(() => this.resetView());
   }
 
-  // --- Lógica Dark Mode ---
   toggleTheme() {
-    this.isDarkMode = !this.isDarkMode;
-    if (this.isDarkMode) {
-      this.renderer.addClass(this.document.body, 'dark-theme');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      this.renderer.removeClass(this.document.body, 'dark-theme');
-      localStorage.setItem('theme', 'light');
+    if (isPlatformBrowser(this.platformId)) {
+      this.isDarkMode = !this.isDarkMode;
+      // ... lógica de toggle
+      if (this.isDarkMode) {
+        this.renderer.addClass(this.document.body, 'dark-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        this.renderer.removeClass(this.document.body, 'dark-theme');
+        localStorage.setItem('theme', 'light');
+      }
     }
   }
 
-  // Refactoricé la carga inicial para limpiar el OnInit
   loadData() {
     this.subjectService.getAll().subscribe({
       next: (data) => (this.subjects = data),

@@ -1,5 +1,12 @@
-import { Component, OnInit, Renderer2, Inject, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  Renderer2,
+  Inject,
+  ChangeDetectorRef,
+  PLATFORM_ID,
+} from '@angular/core';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   FormBuilder,
   FormControl,
@@ -18,7 +25,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { DOCUMENT } from '@angular/common';
 import { Subject } from '../../core/models/subject.model';
 import { Teacher } from '../../core/models/teacher.model';
 import { SubjectService } from '../../core/services/subject.service';
@@ -72,7 +78,8 @@ export class AportarExamenComponent implements OnInit {
     private examService: ExamService,
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.form = this.fb.group({
       subject_id: this.fb.control<number | null>(null, [Validators.required]),
@@ -85,22 +92,29 @@ export class AportarExamenComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadInitialData();
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      this.isDarkMode = true;
-      this.renderer.addClass(this.document.body, 'dark-theme'); // Usar this.document.body
+
+    // 3. ENVOLVER CON ESTE IF
+    if (isPlatformBrowser(this.platformId)) {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        this.isDarkMode = true;
+        this.renderer.addClass(this.document.body, 'dark-theme');
+      }
     }
   }
 
   toggleTheme() {
-    this.isDarkMode = !this.isDarkMode;
+    // Esto también es buena práctica envolverlo, aunque el click solo pasa en el navegador
+    if (isPlatformBrowser(this.platformId)) {
+      this.isDarkMode = !this.isDarkMode;
 
-    if (this.isDarkMode) {
-      this.renderer.addClass(this.document.body, 'dark-theme');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      this.renderer.removeClass(this.document.body, 'dark-theme');
-      localStorage.setItem('theme', 'light');
+      if (this.isDarkMode) {
+        this.renderer.addClass(this.document.body, 'dark-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        this.renderer.removeClass(this.document.body, 'dark-theme');
+        localStorage.setItem('theme', 'light');
+      }
     }
   }
 
