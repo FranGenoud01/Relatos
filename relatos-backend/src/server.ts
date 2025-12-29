@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 async function start() {
   try {
-    await pool.query('SELECT 1');
+    await pool.execute('SELECT 1');
     console.log('✅ Conectado a MySQL');
 
     app.listen(PORT, () => {

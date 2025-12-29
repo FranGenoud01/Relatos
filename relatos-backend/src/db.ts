@@ -10,6 +10,11 @@ const DB_USER: string = process.env.DB_USER ?? 'root';
 const DB_PASSWORD: string = process.env.DB_PASSWORD ?? '';
 const DB_NAME: string = process.env.DB_NAME ?? 'relatos_examenes';
 
+console.log('DB_HOST', DB_HOST);
+console.log('DB_PORT', DB_PORT);
+console.log('DB_USER', DB_USER);
+console.log('DB_NAME', DB_NAME);
+
 export const pool = mysql.createPool({
   host: DB_HOST,
   port: DB_PORT,
