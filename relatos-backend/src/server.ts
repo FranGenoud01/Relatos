@@ -11,8 +11,9 @@ async function start() {
     await pool.execute('SELECT 1');
     console.log('✅ Conectado a MySQL');
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
+    const PORT = Number(process.env.PORT || 3000);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 Servidor escuchando en puerto ${PORT}`);
     });
   } catch (err) {
     console.error('❌ Error al conectar a la base de datos:', err);
