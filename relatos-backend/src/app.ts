@@ -6,7 +6,11 @@ import { examRouter } from './modules/exam_report/exam.routes';
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ['http://localhost:4200', /\.vercel\.app$/],
+  })
+);
 app.use(express.json());
 
 // Rutas
