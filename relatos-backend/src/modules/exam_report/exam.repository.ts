@@ -65,7 +65,7 @@ export async function getRandomExamBySubjectRepo(
   }
 
   sql += `
-    GROUP BY e.id
+    GROUP BY e.id, e.title, e.text, e.date_exam, e.subject_id, m.name
     ORDER BY RAND()
     LIMIT 1
   `;
@@ -92,7 +92,7 @@ export async function findAllExamsRepo() {
     JOIN subjects m ON e.subject_id = m.id
     LEFT JOIN exam_teacher rp ON rp.exam_id = e.id
     LEFT JOIN teachers p ON p.id = rp.teacher_id
-    GROUP BY e.id
+    GROUP BY e.id, e.title, e.text, e.date_exam, e.subject_id, m.name
     ORDER BY e.id DESC
   `);
 
