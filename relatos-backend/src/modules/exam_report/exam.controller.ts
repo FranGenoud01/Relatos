@@ -44,6 +44,8 @@ export async function getRandomExamController(req: Request, res: Response) {
     const exam = await getRandomExamService(subject_id, teacher_id, excludeIds);
     res.json(exam);
   } catch (error: any) {
+    console.error('🔥 getRandomExamController error:', error?.stack || error);
+
     if (error.message === 'MATERIA_OBLIGATORIA') {
       return res.status(400).json({ message: 'materiaId es obligatorio' });
     }
@@ -52,7 +54,9 @@ export async function getRandomExamController(req: Request, res: Response) {
         .status(404)
         .json({ message: 'No hay más relatos para ese filtro' });
     }
-    res.status(500).json({ message: 'Error al obtener relato aleatorio' });
+    return res
+      .status(500)
+      .json({ message: 'Error al obtener relato aleatorio' });
   }
 }
 
