@@ -25,7 +25,15 @@
     <mat-form-field appearance="outline" class="profesores">
       <mat-label>Profesores</mat-label>
       <mat-select formControlName="teachersIds" multiple>
-        <mat-option *ngFor="let t of teachers" [value]="t.id">{{ t.name }}</mat-option>
+
+        <mat-option>
+          <ngx-mat-select-search [formControl]="teacherFilterCtrl" placeholderLabel="Buscar profesor..."
+            noEntriesFoundLabel="No se encontró ese profesor">
+          </ngx-mat-select-search>
+        </mat-option>
+
+        <mat-option *ngFor="let t of filteredTeachers" [value]="t.id">{{ t.name }}</mat-option>
+
       </mat-select>
     </mat-form-field>
 

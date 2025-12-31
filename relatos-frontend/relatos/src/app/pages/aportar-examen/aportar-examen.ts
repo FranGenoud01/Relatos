@@ -25,6 +25,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+// 1. IMPORTAR MODULO DE BÚSQUEDA
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
 import { Subject } from '../../core/models/subject.model';
 import { Teacher } from '../../core/models/teacher.model';
 import { SubjectService } from '../../core/services/subject.service';
@@ -55,6 +59,7 @@ type AportarForm = FormGroup<{
     MatProgressSpinnerModule,
     MatIconModule,
     MatTooltipModule,
+    NgxMatSelectSearchModule, // 2. AGREGAR A IMPORTS
   ],
   templateUrl: './aportar-examen.html',
   styleUrls: ['./aportar-examen.css'],
@@ -64,6 +69,10 @@ export class AportarExamenComponent implements OnInit {
 
   subjects: Subject[] = [];
   teachers: Teacher[] = [];
+
+  // 3. VARIABLES PARA EL FILTRO
+  filteredTeachers: Teacher[] = [];
+  teacherFilterCtrl = new FormControl('');
 
   loading = false;
   errorMsg: string | null = null;
@@ -93,7 +102,6 @@ export class AportarExamenComponent implements OnInit {
   ngOnInit(): void {
     this.loadInitialData();
 
-    // 3. ENVOLVER CON ESTE IF
     if (isPlatformBrowser(this.platformId)) {
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark') {
@@ -101,10 +109,14 @@ export class AportarExamenComponent implements OnInit {
         this.renderer.addClass(this.document.body, 'dark-theme');
       }
     }
+
+    // 4. ESCUCHAR CAMBIOS EN EL BUSCADOR
+    this.teacherFilterCtrl.valueChanges.subscribe((search) => {
+      this.filterTeachers(search);
+    });
   }
 
   toggleTheme() {
-    // Esto también es buena práctica envolverlo, aunque el click solo pasa en el navegador
     if (isPlatformBrowser(this.platformId)) {
       this.isDarkMode = !this.isDarkMode;
 
@@ -129,16 +141,28 @@ export class AportarExamenComponent implements OnInit {
     });
 
     this.teacherService.getAll().subscribe({
-      next: (data) => (this.teachers = data),
+      next: (data) => {
+        this.teachers = data;
+        this.filteredTeachers = data; // 5. INICIALIZAR FILTRADOS
+      },
       error: () => (this.errorMsg = 'No se pudieron cargar los profesores'),
     });
+  }
+
+  // 6. LÓGICA DE FILTRADO
+  filterTeachers(search: string | null) {
+    if (!search) {
+      this.filteredTeachers = this.teachers;
+      return;
+    }
+    search = search.toLowerCase();
+    this.filteredTeachers = this.teachers.filter((t) => t.name.toLowerCase().includes(search!));
   }
 
   addTeacherIfNotExists() {
     const nameRaw = (this.form.value.newTeacherName || '').trim();
     if (!nameRaw) return;
 
-    // check local (case-insensitive) para evitar duplicados en UI
     const already = this.teachers.find((t) => t.name.toLowerCase() === nameRaw.toLowerCase());
     if (already) {
       const current = this.form.value.teachersIds || [];
@@ -157,6 +181,11 @@ export class AportarExamenComponent implements OnInit {
       next: (created) => {
         setTimeout(() => {
           this.teachers = [...this.teachers, created];
+
+          // 7. ACTUALIZAR TAMBIÉN LA LISTA FILTRADA
+          this.filteredTeachers = [...this.teachers];
+          // Re-aplicar filtro si había algo escrito
+          this.filterTeachers(this.teacherFilterCtrl.value);
 
           const current = this.form.value.teachersIds || [];
           this.form.patchValue({
@@ -186,9 +215,8 @@ export class AportarExamenComponent implements OnInit {
       return;
     }
 
-    this.loading = true; // Activa spinner
+    this.loading = true;
 
-    // Date picker -> "YYYY-MM-DD"
     const date: Date | null = this.form.value.date_exam ?? null;
     const yyyyMmDd = date
       ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
@@ -205,7 +233,6 @@ export class AportarExamenComponent implements OnInit {
 
     this.examService.create(payload).subscribe({
       next: () => {
-        // Usamos setTimeout para salir del ciclo actual
         setTimeout(() => {
           this.successMsg = '✅ Relato guardado';
           this.loading = false;
@@ -218,7 +245,6 @@ export class AportarExamenComponent implements OnInit {
             newTeacherName: '',
           });
 
-          // MAGIA AQUÍ: Forzamos a Angular a revisar la vista tras el reset
           this.cd.detectChanges();
         }, 0);
       },
@@ -227,8 +253,6 @@ export class AportarExamenComponent implements OnInit {
           this.errorMsg =
             err?.status === 400 ? 'Faltan datos obligatorios' : 'Error al guardar el relato';
           this.loading = false;
-
-          // MAGIA AQUÍ TAMBIÉN
           this.cd.detectChanges();
         }, 0);
       },
