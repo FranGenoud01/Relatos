@@ -5,11 +5,12 @@ export interface UserRecord {
   name: string;
   email: string;
   password_hash: string;
+  is_admin: number | boolean;
 }
 
 export async function findUserByEmail(email: string): Promise<UserRecord | null> {
   const [rows] = await pool.query(
-    'SELECT id, name, email, password_hash FROM users WHERE email = ? LIMIT 1',
+    'SELECT id, name, email, password_hash, is_admin FROM users WHERE email = ? LIMIT 1',
     [email]
   );
   const users = rows as UserRecord[];
@@ -18,7 +19,7 @@ export async function findUserByEmail(email: string): Promise<UserRecord | null>
 
 export async function findUserById(id: number): Promise<UserRecord | null> {
   const [rows] = await pool.query(
-    'SELECT id, name, email, password_hash FROM users WHERE id = ? LIMIT 1',
+    'SELECT id, name, email, password_hash, is_admin FROM users WHERE id = ? LIMIT 1',
     [id]
   );
   const users = rows as UserRecord[];
@@ -38,5 +39,5 @@ export async function createUser(
   // @ts-ignore
   const insertId: number = result.insertId;
 
-  return { id: insertId, name, email, password_hash: passwordHash };
+  return { id: insertId, name, email, password_hash: passwordHash, is_admin: false };
 }

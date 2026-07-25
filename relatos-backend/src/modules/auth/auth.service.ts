@@ -8,7 +8,7 @@ const JWT_EXPIRES_IN = '30d';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function toAuthUser(user: UserRecord): AuthUser {
-  return { id: user.id, name: user.name, email: user.email };
+  return { id: user.id, name: user.name, email: user.email, isAdmin: Boolean(user.is_admin) };
 }
 
 function signToken(user: UserRecord): string {

@@ -194,9 +194,12 @@ export class AportarExamenComponent implements OnInit {
     };
 
     this.examService.create(payload).subscribe({
-      next: () => {
+      next: (res) => {
         setTimeout(() => {
-          this.successMsg = '✅ Relato guardado';
+          this.successMsg =
+            res?.status === 'pending'
+              ? '🕓 Encontramos un relato parecido: el tuyo va a quedar pendiente de revisión antes de publicarse.'
+              : '✅ Relato guardado';
           this.loading = false;
 
           this.form.reset({

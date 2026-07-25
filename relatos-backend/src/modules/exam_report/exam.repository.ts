@@ -1,15 +1,25 @@
 import { ResultSetHeader } from 'mysql2';
 import { pool } from '../../db';
-import { CreateExamDTO } from './exam.types';
+import { CreateExamRepoDTO } from './exam.types';
 
-export async function createExamRepo(dto: CreateExamDTO): Promise<number> {
+export async function createExamRepo(dto: CreateExamRepoDTO): Promise<number> {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
 
     const [result] = await conn.query(
-      'INSERT INTO exams (subject_id, title, text, date_exam, created_by) VALUES (?, ?, ?, ?, ?)',
-      [dto.subjectId, dto.title, dto.text, dto.dateExamen || null, dto.createdBy ?? null]
+      `INSERT INTO exams (subject_id, title, text, date_exam, created_by, status, duplicate_of, similarity_score)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        dto.subjectId,
+        dto.title,
+        dto.text,
+        dto.dateExamen || null,
+        dto.createdBy ?? null,
+        dto.status,
+        dto.duplicateOf ?? null,
+        dto.similarityScore ?? null,
+      ]
     );
 
     // @ts-ignore
@@ -46,7 +56,7 @@ export async function getRandomExamBySubjectRepo(
     JOIN subjects m ON e.subject_id = m.id
     LEFT JOIN exam_teacher rp ON rp.exam_id = e.id
     LEFT JOIN teachers p ON p.id = rp.teacher_id
-    WHERE e.subject_id = ?
+    WHERE e.subject_id = ? AND e.status = 'approved'
   `;
 
   const params: any[] = [subjectId];
@@ -97,7 +107,7 @@ export interface PaginatedExams {
 }
 
 export async function findAllExamsRepo(params: FindAllExamsParams): Promise<PaginatedExams> {
-  const conditions: string[] = [];
+  const conditions: string[] = [`e.status = 'approved'`];
   const values: any[] = [];
 
   if (params.subjectId) {
@@ -149,4 +159,43 @@ export async function findAllExamsRepo(params: FindAllExamsParams): Promise<Pagi
 
   // @ts-ignore
   return { items: rows, total };
+}
+
+export async function findCandidateExamsBySubjectRepo(
+  subjectId: number
+): Promise<{ id: number; text: string }[]> {
+  const [rows] = await pool.query(
+    `SELECT id, text FROM exams WHERE subject_id = ? AND status = 'approved'`,
+    [subjectId]
+  );
+  return rows as { id: number; text: string }[];
+}
+
+export async function findPendingExamsRepo() {
+  const [rows] = await pool.query(`
+    SELECT
+      e.id, e.title, e.text, DATE_FORMAT(e.date_exam, '%Y-%m-%d') AS date_exam,
+      e.similarity_score, e.created_at,
+      m.name AS subject_name,
+      u.name AS author_name,
+      d.id AS duplicate_id, d.title AS duplicate_title, d.text AS duplicate_text
+    FROM exams e
+    JOIN subjects m ON e.subject_id = m.id
+    LEFT JOIN users u ON u.id = e.created_by
+    LEFT JOIN exams d ON d.id = e.duplicate_of
+    WHERE e.status = 'pending'
+    ORDER BY e.created_at ASC
+  `);
+  return rows;
+}
+
+export async function updateExamStatusRepo(
+  examId: number,
+  status: 'approved' | 'rejected'
+): Promise<boolean> {
+  const [result] = await pool.query<ResultSetHeader>(
+    `UPDATE exams SET status = ? WHERE id = ? AND status = 'pending'`,
+    [status, examId]
+  );
+  return result.affectedRows > 0;
 }

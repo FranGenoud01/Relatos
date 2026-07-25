@@ -1,0 +1,53 @@
+<mat-card class="main-card">
+  <div class="card-header">
+    <h2>Moderación de relatos parecidos</h2>
+  </div>
+
+  <mat-card-content>
+    <div class="loading-container" *ngIf="loading()">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+
+    <div class="message-container error" *ngIf="errorMsg()">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMsg() }}</span>
+    </div>
+
+    <p class="empty-state" *ngIf="!loading() && !errorMsg() && items().length === 0">
+      No hay relatos pendientes de revisión.
+    </p>
+
+    <mat-card class="pending-item" *ngFor="let item of items()">
+      <div class="pending-header">
+        <div class="pending-title">
+          <strong>{{ item.subject_name }}</strong>
+          <span class="pending-meta">
+            {{ item.date_exam ? (item.date_exam | date: 'mediumDate') : 'Fecha desconocida' }}
+            · Aportado por {{ item.author_name || 'Anónimo' }}
+          </span>
+        </div>
+        <span class="similarity-badge">{{ similarityPercent(item.similarity_score) }}% parecido</span>
+      </div>
+
+      <div class="compare-grid">
+        <div class="compare-col">
+          <h4>Relato nuevo (pendiente)</h4>
+          <p class="compare-text">{{ item.text }}</p>
+        </div>
+        <div class="compare-col" *ngIf="item.duplicate_text">
+          <h4>Posible duplicado: {{ item.duplicate_title }}</h4>
+          <p class="compare-text">{{ item.duplicate_text }}</p>
+        </div>
+      </div>
+
+      <div class="pending-actions">
+        <button mat-stroked-button color="warn" (click)="reject(item.id)" [disabled]="processingId() === item.id">
+          Rechazar (duplicado)
+        </button>
+        <button mat-raised-button color="primary" (click)="approve(item.id)" [disabled]="processingId() === item.id">
+          Aprobar
+        </button>
+      </div>
+    </mat-card>
+  </mat-card-content>
+</mat-card>

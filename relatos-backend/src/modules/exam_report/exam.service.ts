@@ -5,7 +5,11 @@ import {
   deleteExamById,
   findAllExamsRepo,
   FindAllExamsParams,
+  findCandidateExamsBySubjectRepo,
+  findPendingExamsRepo,
+  updateExamStatusRepo,
 } from './exam.repository';
+import { findMostSimilarExam, SIMILARITY_THRESHOLD } from './similarity';
 
 export async function createExamService(dto: CreateExamDTO) {
   if (!dto.subjectId || !dto.text || !dto.text.trim()) {
@@ -13,17 +17,48 @@ export async function createExamService(dto: CreateExamDTO) {
   }
 
   const title = dto.title ?? `Relato ${new Date().toISOString().slice(0, 10)}`;
+  const text = dto.text.trim();
+
+  const candidates = await findCandidateExamsBySubjectRepo(dto.subjectId);
+  const match = findMostSimilarExam(text, candidates);
+  const isPending = match !== null && match.score >= SIMILARITY_THRESHOLD;
 
   const id = await createExamRepo({
     subjectId: dto.subjectId,
     title,
-    text: dto.text.trim(),
+    text,
     dateExamen: dto.dateExamen,
     teachersIds: dto.teachersIds || [],
     createdBy: dto.createdBy ?? null,
+    status: isPending ? 'pending' : 'approved',
+    duplicateOf: isPending ? match!.examId : null,
+    similarityScore: isPending ? match!.score : null,
   });
 
-  return { id, subjectId: dto.subjectId, title };
+  return {
+    id,
+    subjectId: dto.subjectId,
+    title,
+    status: isPending ? 'pending' : 'approved',
+  };
+}
+
+export async function getPendingExamsService() {
+  return findPendingExamsRepo();
+}
+
+export async function moderateExamService(
+  examId: number,
+  decision: 'approved' | 'rejected'
+): Promise<void> {
+  if (!Number.isFinite(examId) || examId <= 0) {
+    throw new Error('INVALID_ID');
+  }
+
+  const updated = await updateExamStatusRepo(examId, decision);
+  if (!updated) {
+    throw new Error('NOT_FOUND');
+  }
 }
 
 export async function getRandomExamService(

@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -43,12 +44,23 @@ export class ShellComponent {
   readonly theme = inject(ThemeService);
   readonly auth = inject(AuthService);
 
-  readonly navLinks: NavLink[] = [
+  private readonly baseNavLinks: NavLink[] = [
     { path: '/estudiar', label: 'Estudiar', icon: 'menu_book' },
     { path: '/explorar', label: 'Explorar', icon: 'search' },
     { path: '/aportar', label: 'Aportar', icon: 'add_circle_outline' },
     { path: '/estadisticas', label: 'Estadísticas', icon: 'bar_chart' },
   ];
+
+  private readonly currentUser = toSignal(this.auth.currentUser$, {
+    initialValue: this.auth.currentUser,
+  });
+
+  readonly navLinks = computed<NavLink[]>(() => {
+    if (this.currentUser()?.isAdmin) {
+      return [...this.baseNavLinks, { path: '/admin/pendientes', label: 'Moderación', icon: 'fact_check' }];
+    }
+    return this.baseNavLinks;
+  });
 
   readonly isMobile$: Observable<boolean> = this.breakpointObserver
     .observe(['(max-width: 600px)'])

@@ -7,6 +7,7 @@ import { authRouter } from './modules/auth/auth.routes';
 import { ratingRouter } from './modules/rating/rating.routes';
 import { commentRouter } from './modules/comment/comment.routes';
 import { statsRouter } from './modules/stats/stats.routes';
+import { adminRouter } from './modules/admin/admin.routes';
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.use('/exams', examRouter);
 app.use('/exams/:examId/ratings', ratingRouter);
 app.use('/exams/:examId/comments', commentRouter);
 app.use('/stats', statsRouter);
+app.use('/admin', adminRouter);
 
 export default app;

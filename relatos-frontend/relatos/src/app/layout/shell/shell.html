@@ -1,7 +1,7 @@
 <mat-sidenav-container class="shell-container">
   <mat-sidenav #sidenav mode="over" class="shell-sidenav">
     <mat-nav-list>
-      @for (link of navLinks; track link.path) {
+      @for (link of navLinks(); track link.path) {
         <a mat-list-item [routerLink]="link.path" routerLinkActive="active-link" (click)="sidenav.close()">
           <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
           <span matListItemTitle>{{ link.label }}</span>
@@ -43,7 +43,7 @@
 
       @if (!(isMobile$ | async)) {
         <nav class="nav-links">
-          @for (link of navLinks; track link.path) {
+          @for (link of navLinks(); track link.path) {
             <a mat-button [routerLink]="link.path" routerLinkActive="active-link">
               <mat-icon>{{ link.icon }}</mat-icon>
               {{ link.label }}
