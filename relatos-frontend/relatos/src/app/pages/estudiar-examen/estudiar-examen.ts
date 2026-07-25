@@ -1,5 +1,5 @@
-import { Component, OnInit, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
@@ -10,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 // 1. IMPORTAR EL MÓDULO DE BÚSQUEDA
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -34,15 +33,12 @@ import { ExamService } from '../../core/services/exam.service';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatTooltipModule,
     NgxMatSelectSearchModule, // 2. AGREGAR A LOS IMPORTS
   ],
   templateUrl: './estudiar-examen.html',
   styleUrls: ['./estudiar-examen.css'],
 })
 export class EstudiarExamenComponent implements OnInit {
-  isDarkMode = false;
-
   subjects: Subject[] = [];
   teachers: Teacher[] = [];
 
@@ -64,23 +60,11 @@ export class EstudiarExamenComponent implements OnInit {
   constructor(
     private subjectService: SubjectService,
     private teacherService: TeacherService,
-    private examService: ExamService,
-    private renderer: Renderer2,
-    @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private examService: ExamService
   ) {}
 
   ngOnInit(): void {
     this.loadData();
-
-    // Lógica Dark Mode
-    if (isPlatformBrowser(this.platformId)) {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        this.isDarkMode = true;
-        this.renderer.addClass(this.document.body, 'dark-theme');
-      }
-    }
 
     // 4. ESCUCHAR CAMBIOS EN EL BUSCADOR DE PROFESORES
     this.teacherFilterCtrl.valueChanges.subscribe((search) => {
@@ -90,19 +74,6 @@ export class EstudiarExamenComponent implements OnInit {
     // Resetear vista al cambiar filtros principales
     this.subjectIdCtrl.valueChanges.subscribe(() => this.resetView());
     this.teacherIdCtrl.valueChanges.subscribe(() => this.resetView());
-  }
-
-  toggleTheme() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.isDarkMode = !this.isDarkMode;
-      if (this.isDarkMode) {
-        this.renderer.addClass(this.document.body, 'dark-theme');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        this.renderer.removeClass(this.document.body, 'dark-theme');
-        localStorage.setItem('theme', 'light');
-      }
-    }
   }
 
   loadData() {

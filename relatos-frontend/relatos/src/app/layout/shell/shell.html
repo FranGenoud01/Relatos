@@ -1,0 +1,76 @@
+<mat-sidenav-container class="shell-container">
+  <mat-sidenav #sidenav mode="over" class="shell-sidenav">
+    <mat-nav-list>
+      @for (link of navLinks; track link.path) {
+        <a mat-list-item [routerLink]="link.path" routerLinkActive="active-link" (click)="sidenav.close()">
+          <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
+          <span matListItemTitle>{{ link.label }}</span>
+        </a>
+      }
+      <a mat-list-item (click)="theme.toggle(); sidenav.close()">
+        <mat-icon matListItemIcon>{{ (theme.isDarkMode$ | async) ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        <span matListItemTitle>Cambiar tema</span>
+      </a>
+
+      @if (auth.currentUser$ | async; as user) {
+        <a mat-list-item (click)="logout(); sidenav.close()">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span matListItemTitle>Salir ({{ user.name }})</span>
+        </a>
+      } @else {
+        <a mat-list-item routerLink="/login" (click)="sidenav.close()">
+          <mat-icon matListItemIcon>login</mat-icon>
+          <span matListItemTitle>Ingresar</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="shell-toolbar">
+      @if (isMobile$ | async) {
+        <button mat-icon-button (click)="sidenav.toggle()" aria-label="Abrir menú">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+
+      <a routerLink="/estudiar" class="brand">
+        <mat-icon>history_edu</mat-icon>
+        <span>Relatos</span>
+      </a>
+
+      <span class="spacer"></span>
+
+      @if (!(isMobile$ | async)) {
+        <nav class="nav-links">
+          @for (link of navLinks; track link.path) {
+            <a mat-button [routerLink]="link.path" routerLinkActive="active-link">
+              <mat-icon>{{ link.icon }}</mat-icon>
+              {{ link.label }}
+            </a>
+          }
+        </nav>
+
+        <button mat-icon-button (click)="theme.toggle()" matTooltip="Cambiar tema">
+          <mat-icon>{{ (theme.isDarkMode$ | async) ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
+
+        @if (auth.currentUser$ | async; as user) {
+          <button mat-button (click)="logout()" matTooltip="Cerrar sesión">
+            <mat-icon>logout</mat-icon>
+            {{ user.name }}
+          </button>
+        } @else {
+          <a mat-button routerLink="/login">
+            <mat-icon>login</mat-icon>
+            Ingresar
+          </a>
+        }
+      }
+    </mat-toolbar>
+
+    <main class="shell-content">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

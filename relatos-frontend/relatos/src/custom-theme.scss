@@ -9,11 +9,28 @@
 html {
   @include mat.theme((
     color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
+      theme-type: light,
+      primary: mat.$violet-palette,
+      tertiary: mat.$orange-palette,
     ),
     typography: Roboto,
     density: 0,
+  ));
+}
+
+// Re-declares the same theme with theme-type: dark, scoped to the class the
+// ThemeService toggles on <body>. Angular Material re-derives every system
+// color token (--mat-sys-*) under this selector, so every Material component
+// — including ones rendered into the CDK overlay container like mat-select
+// panels, menus and the datepicker — re-themes correctly without needing
+// manual per-component dark-mode overrides.
+body.dark-theme {
+  @include mat.theme((
+    color: (
+      theme-type: dark,
+      primary: mat.$violet-palette,
+      tertiary: mat.$orange-palette,
+    ),
   ));
 }
 
@@ -32,4 +49,8 @@ body {
 
   // Reset the user agent margin.
   margin: 0;
+}
+
+body.dark-theme {
+  color-scheme: dark;
 }

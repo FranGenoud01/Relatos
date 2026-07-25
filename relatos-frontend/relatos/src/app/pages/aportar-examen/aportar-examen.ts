@@ -1,12 +1,5 @@
-import {
-  Component,
-  OnInit,
-  Renderer2,
-  Inject,
-  ChangeDetectorRef,
-  PLATFORM_ID,
-} from '@angular/core';
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormControl,
@@ -18,8 +11,6 @@ import {
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -57,16 +48,12 @@ type AportarForm = FormGroup<{
     MatDatepickerModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
-    MatIconModule,
-    MatTooltipModule,
     NgxMatSelectSearchModule, // 2. AGREGAR A IMPORTS
   ],
   templateUrl: './aportar-examen.html',
   styleUrls: ['./aportar-examen.css'],
 })
 export class AportarExamenComponent implements OnInit {
-  isDarkMode = false;
-
   subjects: Subject[] = [];
   teachers: Teacher[] = [];
 
@@ -85,10 +72,7 @@ export class AportarExamenComponent implements OnInit {
     private subjectService: SubjectService,
     private teacherService: TeacherService,
     private examService: ExamService,
-    private renderer: Renderer2,
-    @Inject(DOCUMENT) private document: Document,
-    private cd: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private cd: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       subject_id: this.fb.control<number | null>(null, [Validators.required]),
@@ -102,32 +86,10 @@ export class AportarExamenComponent implements OnInit {
   ngOnInit(): void {
     this.loadInitialData();
 
-    if (isPlatformBrowser(this.platformId)) {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        this.isDarkMode = true;
-        this.renderer.addClass(this.document.body, 'dark-theme');
-      }
-    }
-
     // 4. ESCUCHAR CAMBIOS EN EL BUSCADOR
     this.teacherFilterCtrl.valueChanges.subscribe((search) => {
       this.filterTeachers(search);
     });
-  }
-
-  toggleTheme() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.isDarkMode = !this.isDarkMode;
-
-      if (this.isDarkMode) {
-        this.renderer.addClass(this.document.body, 'dark-theme');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        this.renderer.removeClass(this.document.body, 'dark-theme');
-        localStorage.setItem('theme', 'light');
-      }
-    }
   }
 
   get f() {
