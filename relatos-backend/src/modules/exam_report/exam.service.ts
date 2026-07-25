@@ -4,8 +4,8 @@ import {
   getRandomExamBySubjectRepo,
   deleteExamById,
   findAllExamsRepo,
+  FindAllExamsParams,
 } from './exam.repository';
-import { get } from 'node:http';
 
 export async function createExamService(dto: CreateExamDTO) {
   if (!dto.subjectId || !dto.text || !dto.text.trim()) {
@@ -55,12 +55,31 @@ export async function deleteExamService(id: number): Promise<void> {
   }
 }
 
-export async function findAllExamsService() {
-  const result = await findAllExamsRepo();
+const MAX_LIMIT = 50;
+const DEFAULT_LIMIT = 10;
 
-  if (!Array.isArray(result) || result.length === 0) {
-    throw new Error('NO_EXAMS_FOUND');
-  }
+export async function findAllExamsService(params: {
+  subjectId?: number | undefined;
+  teacherId?: number | undefined;
+  search?: string | undefined;
+  page?: number | undefined;
+  limit?: number | undefined;
+}) {
+  const page = params.page && params.page > 0 ? params.page : 1;
+  const limit =
+    params.limit && params.limit > 0 && params.limit <= MAX_LIMIT
+      ? params.limit
+      : DEFAULT_LIMIT;
 
-  return result;
+  const repoParams: FindAllExamsParams = {
+    subjectId: params.subjectId,
+    teacherId: params.teacherId,
+    search: params.search?.trim() || undefined,
+    page,
+    limit,
+  };
+
+  const { items, total } = await findAllExamsRepo(repoParams);
+
+  return { items, total, page, limit };
 }

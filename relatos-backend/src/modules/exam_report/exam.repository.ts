@@ -83,19 +83,70 @@ export async function deleteExamById(id: number): Promise<boolean> {
   return result.affectedRows > 0;
 }
 
-export async function findAllExamsRepo() {
-  const [rows] = await pool.query(`
+export interface FindAllExamsParams {
+  subjectId?: number | undefined;
+  teacherId?: number | undefined;
+  search?: string | undefined;
+  page: number;
+  limit: number;
+}
+
+export interface PaginatedExams {
+  items: any[];
+  total: number;
+}
+
+export async function findAllExamsRepo(params: FindAllExamsParams): Promise<PaginatedExams> {
+  const conditions: string[] = [];
+  const values: any[] = [];
+
+  if (params.subjectId) {
+    conditions.push('e.subject_id = ?');
+    values.push(params.subjectId);
+  }
+
+  if (params.teacherId) {
+    conditions.push(`EXISTS (
+      SELECT 1 FROM exam_teacher et2
+      WHERE et2.exam_id = e.id AND et2.teacher_id = ?
+    )`);
+    values.push(params.teacherId);
+  }
+
+  if (params.search) {
+    conditions.push('(e.text LIKE ? OR e.title LIKE ?)');
+    const like = `%${params.search}%`;
+    values.push(like, like);
+  }
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  const [countRows] = await pool.query(
+    `SELECT COUNT(*) AS total FROM exams e ${whereClause}`,
+    values
+  );
+  // @ts-ignore
+  const total: number = countRows[0]?.total ?? 0;
+
+  const offset = (params.page - 1) * params.limit;
+
+  const [rows] = await pool.query(
+    `
     SELECT e.id, e.title, e.text, DATE_FORMAT(e.date_exam, '%Y-%m-%d') AS date_exam, e.subject_id,
-           m.name AS subject,
-            GROUP_CONCAT(p.name SEPARATOR ', ') AS teachers
+           m.name AS subject_name,
+           GROUP_CONCAT(DISTINCT p.name SEPARATOR ', ') AS teachers
     FROM exams e
     JOIN subjects m ON e.subject_id = m.id
     LEFT JOIN exam_teacher rp ON rp.exam_id = e.id
     LEFT JOIN teachers p ON p.id = rp.teacher_id
+    ${whereClause}
     GROUP BY e.id, e.title, e.text, e.date_exam, e.subject_id, m.name
     ORDER BY e.id DESC
-  `);
+    LIMIT ? OFFSET ?
+    `,
+    [...values, params.limit, offset]
+  );
 
   // @ts-ignore
-  return rows;
+  return { items: rows, total };
 }

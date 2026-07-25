@@ -45,6 +45,7 @@ export class ShellComponent {
 
   readonly navLinks: NavLink[] = [
     { path: '/estudiar', label: 'Estudiar', icon: 'menu_book' },
+    { path: '/explorar', label: 'Explorar', icon: 'search' },
     { path: '/aportar', label: 'Aportar', icon: 'add_circle_outline' },
   ];
 

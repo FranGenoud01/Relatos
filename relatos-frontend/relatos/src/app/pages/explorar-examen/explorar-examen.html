@@ -1,0 +1,75 @@
+<mat-card class="main-card">
+  <div class="card-header">
+    <h2>Explorar Relatos</h2>
+  </div>
+
+  <mat-card-content>
+    <div class="filters-grid">
+      <mat-form-field appearance="outline" class="filter-item">
+        <mat-label>Materia</mat-label>
+        <mat-select [formControl]="subjectIdCtrl">
+          <mat-option [value]="null">Todas</mat-option>
+          <mat-option *ngFor="let s of subjects()" [value]="s.id">{{ s.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-item">
+        <mat-label>Profesor</mat-label>
+        <mat-select [formControl]="teacherIdCtrl">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="teacherFilterCtrl" placeholderLabel="Buscar profesor..."
+              noEntriesFoundLabel="No se encontró ese profesor">
+            </ngx-mat-select-search>
+          </mat-option>
+
+          <mat-option [value]="null">Todos</mat-option>
+
+          <mat-option *ngFor="let t of filteredTeachers()" [value]="t.id">
+            {{ t.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-item search-item">
+        <mat-label>Buscar en el texto</mat-label>
+        <input matInput [formControl]="searchCtrl" placeholder="Palabra clave..." />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="loading-container" *ngIf="loading()">
+      <mat-spinner diameter="32"></mat-spinner>
+      <span class="loading-text">Buscando relatos...</span>
+    </div>
+
+    <div class="message-container error" *ngIf="errorMsg()">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMsg() }}</span>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading() && !errorMsg() && exams().length === 0">
+      No hay relatos para estos filtros.
+    </div>
+
+    <mat-accordion *ngIf="!loading() && exams().length > 0" class="results-list">
+      <mat-expansion-panel *ngFor="let exam of exams()">
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ exam.subject_name }}</mat-panel-title>
+          <mat-panel-description>
+            {{ exam.date_exam ? (exam.date_exam | date:'mediumDate') : 'Fecha desconocida' }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <p class="exam-text">{{ exam.text }}</p>
+        <p class="teachers-text">
+          <mat-icon class="tiny-icon">person</mat-icon>
+          Profesores: {{ exam.teachers || 'No registrados' }}
+        </p>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-paginator *ngIf="total() > 0" [length]="total()" [pageSize]="pageSize()" [pageIndex]="pageIndex()"
+      [pageSizeOptions]="[10, 20, 50]" (page)="onPage($event)">
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>

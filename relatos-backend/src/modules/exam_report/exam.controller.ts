@@ -82,8 +82,20 @@ export async function deleteExamController(req: Request, res: Response) {
 
 export async function findAllExamsController(req: Request, res: Response) {
   try {
-    const exams = await findAllExamsService();
-    res.json(exams);
+    const subject_id = req.query.subject_id ? Number(req.query.subject_id) : undefined;
+    const teacher_id = req.query.teacher_id ? Number(req.query.teacher_id) : undefined;
+    const search = typeof req.query.search === 'string' ? req.query.search : undefined;
+    const page = req.query.page ? Number(req.query.page) : undefined;
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
+
+    const result = await findAllExamsService({
+      subjectId: subject_id,
+      teacherId: teacher_id,
+      search,
+      page,
+      limit,
+    });
+    res.json(result);
   } catch (error: any) {
     console.error(error);
     res.status(500).json({ message: 'Error al obtener los examenes' });
