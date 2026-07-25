@@ -4,4 +4,5 @@ export interface CreateExamDTO {
   text: string;
   dateExamen: string; // YYYY-MM-DD
   teachersIds?: number[];
+  createdBy?: number | null;
 }

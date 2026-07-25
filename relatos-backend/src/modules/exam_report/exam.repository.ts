@@ -8,8 +8,8 @@ export async function createExamRepo(dto: CreateExamDTO): Promise<number> {
     await conn.beginTransaction();
 
     const [result] = await conn.query(
-      'INSERT INTO exams (subject_id, title, text, date_exam) VALUES (?, ?, ?, ?)',
-      [dto.subjectId, dto.title, dto.text, dto.dateExamen || null]
+      'INSERT INTO exams (subject_id, title, text, date_exam, created_by) VALUES (?, ?, ?, ?, ?)',
+      [dto.subjectId, dto.title, dto.text, dto.dateExamen || null, dto.createdBy ?? null]
     );
 
     // @ts-ignore

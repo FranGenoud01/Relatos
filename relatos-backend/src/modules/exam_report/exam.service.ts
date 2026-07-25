@@ -20,6 +20,7 @@ export async function createExamService(dto: CreateExamDTO) {
     text: dto.text.trim(),
     dateExamen: dto.dateExamen,
     teachersIds: dto.teachersIds || [],
+    createdBy: dto.createdBy ?? null,
   });
 
   return { id, subjectId: dto.subjectId, title };

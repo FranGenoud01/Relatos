@@ -14,6 +14,7 @@ export async function createExamController(req: Request, res: Response) {
       text: text,
       dateExamen: date_exam,
       teachersIds: teachersIds,
+      createdBy: req.userId ?? null,
     });
     res.status(201).json(exam);
   } catch (error: any) {
