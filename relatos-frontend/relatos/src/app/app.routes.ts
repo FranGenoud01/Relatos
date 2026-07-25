@@ -23,5 +23,12 @@ export const routes: Routes = [
     canActivate: [adminGuard],
     title: 'Moderación · Relatos',
   },
+  {
+    path: 'admin/contenido',
+    loadComponent: () =>
+      import('./pages/admin-contenido/admin-contenido').then((m) => m.AdminContenidoComponent),
+    canActivate: [adminGuard],
+    title: 'Gestión de contenido · Relatos',
+  },
   { path: '**', redirectTo: 'estudiar' },
 ];

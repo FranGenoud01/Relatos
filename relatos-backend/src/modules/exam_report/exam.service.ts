@@ -2,11 +2,13 @@ import { CreateExamDTO } from './exam.types';
 import {
   createExamRepo,
   getRandomExamBySubjectRepo,
-  deleteExamById,
   findAllExamsRepo,
   FindAllExamsParams,
   findCandidateExamsBySubjectRepo,
+  findDeletedExamsRepo,
   findPendingExamsRepo,
+  restoreExamRepo,
+  softDeleteExamRepo,
   updateExamStatusRepo,
 } from './exam.repository';
 import { findMostSimilarExam, SIMILARITY_THRESHOLD } from './similarity';
@@ -78,14 +80,30 @@ export async function getRandomExamService(
   return exam;
 }
 
-export async function deleteExamService(id: number): Promise<void> {
+export async function getDeletedExamsService() {
+  return findDeletedExamsRepo();
+}
+
+export async function softDeleteExamService(id: number, deletedBy: number): Promise<void> {
   if (!Number.isFinite(id) || id <= 0) {
     throw new Error('INVALID_ID');
   }
 
-  const deleted = await deleteExamById(id);
+  const deleted = await softDeleteExamRepo(id, deletedBy);
 
   if (!deleted) {
+    throw new Error('NOT_FOUND');
+  }
+}
+
+export async function restoreExamService(id: number): Promise<void> {
+  if (!Number.isFinite(id) || id <= 0) {
+    throw new Error('INVALID_ID');
+  }
+
+  const restored = await restoreExamRepo(id);
+
+  if (!restored) {
     throw new Error('NOT_FOUND');
   }
 }

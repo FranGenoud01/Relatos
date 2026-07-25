@@ -1,0 +1,141 @@
+<app-page-header icon="delete_sweep" title="Gestión de contenido"
+  subtitle="Eliminá relatos o profesores y restauralos desde la papelera si te equivocaste." />
+
+<mat-tab-group>
+  <mat-tab label="Relatos">
+    <div class="tab-body">
+      <mat-button-toggle-group [value]="examsView()" (change)="setExamsView($event.value)">
+        <mat-button-toggle value="active">Activos</mat-button-toggle>
+        <mat-button-toggle value="deleted">Papelera</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      @if (examsView() === 'active') {
+        <div class="loading-container" *ngIf="examsLoading()">
+          <mat-spinner diameter="32"></mat-spinner>
+        </div>
+
+        <div class="message-container error" *ngIf="examsError()">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ examsError() }}</span>
+        </div>
+
+        <p class="empty-state" *ngIf="!examsLoading() && !examsError() && exams().length === 0">
+          No hay relatos activos.
+        </p>
+
+        <mat-card class="item-row" *ngFor="let exam of exams()">
+          <div class="item-info">
+            <strong>{{ exam.subject_name }}</strong>
+            <span class="item-meta">
+              {{ exam.date_exam ? (exam.date_exam | date: 'mediumDate') : 'Fecha desconocida' }}
+              · Profesores: {{ exam.teachers || 'No registrados' }}
+            </span>
+            <p class="item-text">{{ exam.text }}</p>
+          </div>
+          <button mat-stroked-button color="warn" (click)="deleteExam(exam)"
+            [disabled]="examsProcessingId() === exam.id">
+            <mat-icon>delete</mat-icon>
+            Eliminar
+          </button>
+        </mat-card>
+
+        <mat-paginator *ngIf="examsTotal() > 0" [length]="examsTotal()" [pageSize]="examsPageSize()"
+          [pageIndex]="examsPageIndex()" [pageSizeOptions]="[10, 20, 50]" (page)="onExamsPage($event)">
+        </mat-paginator>
+      } @else {
+        <div class="loading-container" *ngIf="deletedExamsLoading()">
+          <mat-spinner diameter="32"></mat-spinner>
+        </div>
+
+        <div class="message-container error" *ngIf="deletedExamsError()">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ deletedExamsError() }}</span>
+        </div>
+
+        <p class="empty-state" *ngIf="!deletedExamsLoading() && !deletedExamsError() && deletedExams().length === 0">
+          La papelera de relatos está vacía.
+        </p>
+
+        <mat-card class="item-row" *ngFor="let exam of deletedExams()">
+          <div class="item-info">
+            <strong>{{ exam.subject_name }}</strong>
+            <span class="item-meta">
+              Eliminado el {{ exam.deleted_at | date: 'medium' }}
+              @if (exam.deleted_by_name) { por {{ exam.deleted_by_name }} }
+            </span>
+            <p class="item-text">{{ exam.text }}</p>
+          </div>
+          <button mat-stroked-button color="primary" (click)="restoreExam(exam)"
+            [disabled]="deletedExamsProcessingId() === exam.id">
+            <mat-icon>restore</mat-icon>
+            Restaurar
+          </button>
+        </mat-card>
+      }
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Profesores">
+    <div class="tab-body">
+      <mat-button-toggle-group [value]="teachersView()" (change)="setTeachersView($event.value)">
+        <mat-button-toggle value="active">Activos</mat-button-toggle>
+        <mat-button-toggle value="deleted">Papelera</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      @if (teachersView() === 'active') {
+        <div class="loading-container" *ngIf="teachersLoading()">
+          <mat-spinner diameter="32"></mat-spinner>
+        </div>
+
+        <div class="message-container error" *ngIf="teachersError()">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ teachersError() }}</span>
+        </div>
+
+        <p class="empty-state" *ngIf="!teachersLoading() && !teachersError() && teachers().length === 0">
+          No hay profesores activos.
+        </p>
+
+        <mat-card class="item-row" *ngFor="let teacher of teachers()">
+          <div class="item-info">
+            <strong>{{ teacher.name }}</strong>
+          </div>
+          <button mat-stroked-button color="warn" (click)="deleteTeacher(teacher)"
+            [disabled]="teachersProcessingId() === teacher.id">
+            <mat-icon>delete</mat-icon>
+            Eliminar
+          </button>
+        </mat-card>
+      } @else {
+        <div class="loading-container" *ngIf="deletedTeachersLoading()">
+          <mat-spinner diameter="32"></mat-spinner>
+        </div>
+
+        <div class="message-container error" *ngIf="deletedTeachersError()">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ deletedTeachersError() }}</span>
+        </div>
+
+        <p class="empty-state"
+          *ngIf="!deletedTeachersLoading() && !deletedTeachersError() && deletedTeachers().length === 0">
+          La papelera de profesores está vacía.
+        </p>
+
+        <mat-card class="item-row" *ngFor="let teacher of deletedTeachers()">
+          <div class="item-info">
+            <strong>{{ teacher.name }}</strong>
+            <span class="item-meta">
+              Eliminado el {{ teacher.deleted_at | date: 'medium' }}
+              @if (teacher.deleted_by_name) { por {{ teacher.deleted_by_name }} }
+            </span>
+          </div>
+          <button mat-stroked-button color="primary" (click)="restoreTeacher(teacher)"
+            [disabled]="deletedTeachersProcessingId() === teacher.id">
+            <mat-icon>restore</mat-icon>
+            Restaurar
+          </button>
+        </mat-card>
+      }
+    </div>
+  </mat-tab>
+</mat-tab-group>

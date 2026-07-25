@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import {
   createExamService,
   getRandomExamService,
-  deleteExamService,
   findAllExamsService,
 } from './exam.service';
 
@@ -58,25 +57,6 @@ export async function getRandomExamController(req: Request, res: Response) {
     return res
       .status(500)
       .json({ message: 'Error al obtener relato aleatorio' });
-  }
-}
-
-export async function deleteExamController(req: Request, res: Response) {
-  try {
-    const id = Number(req.params.id);
-    await deleteExamService(id);
-    return res.status(200).json({ message: `Examen número ${id} eliminado` });
-  } catch (error: any) {
-    console.error(error);
-
-    if (error.message === 'INVALID_ID') {
-      return res.status(400).json({ message: 'ID inválido' });
-    }
-    if (error.message === 'NOT_FOUND') {
-      return res.status(404).json({ message: 'Examen no encontrado' });
-    }
-
-    return res.status(500).json({ message: 'Error al eliminar examen' });
   }
 }
 

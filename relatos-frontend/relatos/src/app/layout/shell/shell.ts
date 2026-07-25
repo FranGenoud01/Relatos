@@ -57,7 +57,11 @@ export class ShellComponent {
 
   readonly navLinks = computed<NavLink[]>(() => {
     if (this.currentUser()?.isAdmin) {
-      return [...this.baseNavLinks, { path: '/admin/pendientes', label: 'Moderación', icon: 'fact_check' }];
+      return [
+        ...this.baseNavLinks,
+        { path: '/admin/pendientes', label: 'Moderación', icon: 'fact_check' },
+        { path: '/admin/contenido', label: 'Contenido', icon: 'delete_sweep' },
+      ];
     }
     return this.baseNavLinks;
   });

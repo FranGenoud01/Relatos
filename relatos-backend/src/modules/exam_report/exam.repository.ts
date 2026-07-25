@@ -56,7 +56,7 @@ export async function getRandomExamBySubjectRepo(
     JOIN subjects m ON e.subject_id = m.id
     LEFT JOIN exam_teacher rp ON rp.exam_id = e.id
     LEFT JOIN teachers p ON p.id = rp.teacher_id
-    WHERE e.subject_id = ? AND e.status = 'approved'
+    WHERE e.subject_id = ? AND e.status = 'approved' AND e.deleted_at IS NULL
   `;
 
   const params: any[] = [subjectId];
@@ -85,14 +85,6 @@ export async function getRandomExamBySubjectRepo(
   return rows[0] || null;
 }
 
-export async function deleteExamById(id: number): Promise<boolean> {
-  const [result] = await pool.query<ResultSetHeader>(
-    'DELETE FROM exams WHERE id = ?',
-    [id]
-  );
-  return result.affectedRows > 0;
-}
-
 export interface FindAllExamsParams {
   subjectId?: number | undefined;
   teacherId?: number | undefined;
@@ -107,7 +99,7 @@ export interface PaginatedExams {
 }
 
 export async function findAllExamsRepo(params: FindAllExamsParams): Promise<PaginatedExams> {
-  const conditions: string[] = [`e.status = 'approved'`];
+  const conditions: string[] = [`e.status = 'approved'`, `e.deleted_at IS NULL`];
   const values: any[] = [];
 
   if (params.subjectId) {
@@ -165,7 +157,7 @@ export async function findCandidateExamsBySubjectRepo(
   subjectId: number
 ): Promise<{ id: number; text: string }[]> {
   const [rows] = await pool.query(
-    `SELECT id, text FROM exams WHERE subject_id = ? AND status = 'approved'`,
+    `SELECT id, text FROM exams WHERE subject_id = ? AND status = 'approved' AND deleted_at IS NULL`,
     [subjectId]
   );
   return rows as { id: number; text: string }[];
@@ -183,7 +175,7 @@ export async function findPendingExamsRepo() {
     JOIN subjects m ON e.subject_id = m.id
     LEFT JOIN users u ON u.id = e.created_by
     LEFT JOIN exams d ON d.id = e.duplicate_of
-    WHERE e.status = 'pending'
+    WHERE e.status = 'pending' AND e.deleted_at IS NULL
     ORDER BY e.created_at ASC
   `);
   return rows;
@@ -198,4 +190,36 @@ export async function updateExamStatusRepo(
     [status, examId]
   );
   return result.affectedRows > 0;
+}
+
+export async function softDeleteExamRepo(id: number, deletedBy: number): Promise<boolean> {
+  const [result] = await pool.query<ResultSetHeader>(
+    `UPDATE exams SET deleted_at = NOW(), deleted_by = ? WHERE id = ? AND deleted_at IS NULL`,
+    [deletedBy, id]
+  );
+  return result.affectedRows > 0;
+}
+
+export async function restoreExamRepo(id: number): Promise<boolean> {
+  const [result] = await pool.query<ResultSetHeader>(
+    `UPDATE exams SET deleted_at = NULL, deleted_by = NULL WHERE id = ? AND deleted_at IS NOT NULL`,
+    [id]
+  );
+  return result.affectedRows > 0;
+}
+
+export async function findDeletedExamsRepo() {
+  const [rows] = await pool.query(`
+    SELECT
+      e.id, e.title, e.text, DATE_FORMAT(e.date_exam, '%Y-%m-%d') AS date_exam,
+      e.deleted_at,
+      m.name AS subject_name,
+      u.name AS deleted_by_name
+    FROM exams e
+    JOIN subjects m ON e.subject_id = m.id
+    LEFT JOIN users u ON u.id = e.deleted_by
+    WHERE e.deleted_at IS NOT NULL
+    ORDER BY e.deleted_at DESC
+  `);
+  return rows;
 }
