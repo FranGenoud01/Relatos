@@ -47,6 +47,7 @@ export class ShellComponent {
     { path: '/estudiar', label: 'Estudiar', icon: 'menu_book' },
     { path: '/explorar', label: 'Explorar', icon: 'search' },
     { path: '/aportar', label: 'Aportar', icon: 'add_circle_outline' },
+    { path: '/estadisticas', label: 'Estadísticas', icon: 'bar_chart' },
   ];
 
   readonly isMobile$: Observable<boolean> = this.breakpointObserver

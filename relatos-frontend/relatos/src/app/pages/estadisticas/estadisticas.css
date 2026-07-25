@@ -1,0 +1,141 @@
+mat-card.main-card {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 24px;
+  border-radius: 16px;
+}
+
+.card-header {
+  margin-bottom: 24px;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-weight: 500;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0;
+}
+
+.message-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+:host-context(.dark-theme) .error {
+  background-color: #450a0a;
+  color: #fca5a5;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.kpi-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 8px;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+:host-context(.dark-theme) .kpi-tile {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.kpi-value {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.kpi-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #777);
+  margin-top: 4px;
+  text-align: center;
+}
+
+.stat-section {
+  margin-top: 24px;
+}
+
+.stat-section h3 {
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 32px auto;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+}
+
+.bar-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.bar-track {
+  height: 12px;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+:host-context(.dark-theme) .bar-track {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.bar-fill {
+  height: 100%;
+  background-color: var(--mat-sys-primary);
+  border-radius: 0 4px 4px 0;
+}
+
+.bar-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+}
+
+.bar-empty-flag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #888);
+  white-space: nowrap;
+}
+
+.tiny-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 600px) {
+  .bar-row {
+    grid-template-columns: 100px 1fr 28px;
+  }
+
+  .bar-empty-flag {
+    grid-column: 1 / -1;
+  }
+}
