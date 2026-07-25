@@ -8,11 +8,11 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -25,6 +25,7 @@ import { Teacher } from '../../core/models/teacher.model';
 import { SubjectService } from '../../core/services/subject.service';
 import { TeacherService } from '../../core/services/teacher.service';
 import { ExamService } from '../../core/services/exam.service';
+import { PageHeaderComponent } from '../../shared/page-header/page-header';
 
 type AportarForm = FormGroup<{
   subject_id: FormControl<number | null>;
@@ -40,15 +41,16 @@ type AportarForm = FormGroup<{
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
+    MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
     NgxMatSelectSearchModule, // 2. AGREGAR A IMPORTS
+    PageHeaderComponent,
   ],
   templateUrl: './aportar-examen.html',
   styleUrls: ['./aportar-examen.css'],

@@ -1,73 +1,83 @@
-<mat-card class="main-card">
-  <div class="card-header">
-    <h2>Aportar Examen</h2>
+<app-page-header icon="edit_note" title="Aportar un relato"
+  subtitle="Contá cómo fue tu examen para ayudar a quienes vienen después." />
+
+<form [formGroup]="form" class="aportar-form">
+  <div class="form-panel">
+    <h2 class="panel-title">Datos del examen</h2>
+
+    <div class="panel-grid">
+      <mat-form-field appearance="outline" class="materia">
+        <mat-label>Materia</mat-label>
+        <mat-select formControlName="subject_id">
+          <mat-option *ngFor="let s of subjects" [value]="s.id">{{ s.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="f.subject_id.touched && f.subject_id.invalid">Elegí una materia</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="fecha">
+        <mat-label>Fecha del examen</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date_exam" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="panel-grid teachers-row">
+      <mat-form-field appearance="outline" class="profesores">
+        <mat-label>Profesores</mat-label>
+        <mat-select formControlName="teachersIds" multiple>
+
+          <mat-option>
+            <ngx-mat-select-search [formControl]="teacherFilterCtrl" placeholderLabel="Buscar profesor..."
+              noEntriesFoundLabel="No se encontró ese profesor">
+            </ngx-mat-select-search>
+          </mat-option>
+
+          <mat-option *ngFor="let t of filteredTeachers" [value]="t.id">{{ t.name }}</mat-option>
+
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="nuevo-profesor">
+        <mat-label>Agregar profesor si no existe</mat-label>
+        <input matInput formControlName="newTeacherName" placeholder="Nombre del profesor" />
+      </mat-form-field>
+
+      <button mat-stroked-button type="button" class="btn-agregar" (click)="addTeacherIfNotExists()"
+        [disabled]="loading">
+        <mat-icon>add</mat-icon>
+        Agregar
+      </button>
+    </div>
   </div>
 
-  <mat-card-content [formGroup]="form" class="aport-grid">
+  <div class="form-panel">
+    <h2 class="panel-title">Tu relato</h2>
 
-    <mat-form-field appearance="outline" class="materia">
-      <mat-label>Materia</mat-label>
-      <mat-select formControlName="subject_id">
-        <mat-option *ngFor="let s of subjects" [value]="s.id">{{ s.name }}</mat-option>
-      </mat-select>
-      <mat-error *ngIf="f.subject_id.touched && f.subject_id.invalid">Elegí una materia</mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="fecha">
-      <mat-label>Fecha del examen</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="date_exam" />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="profesores">
-      <mat-label>Profesores</mat-label>
-      <mat-select formControlName="teachersIds" multiple>
-
-        <mat-option>
-          <ngx-mat-select-search [formControl]="teacherFilterCtrl" placeholderLabel="Buscar profesor..."
-            noEntriesFoundLabel="No se encontró ese profesor">
-          </ngx-mat-select-search>
-        </mat-option>
-
-        <mat-option *ngFor="let t of filteredTeachers" [value]="t.id">{{ t.name }}</mat-option>
-
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="nuevo-profesor">
-      <mat-label>Agregar profesor si no existe</mat-label>
-      <input matInput formControlName="newTeacherName" placeholder="Nombre del profesor" />
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" class="btn-agregar" (click)="addTeacherIfNotExists()"
-      [disabled]="loading">
-      Agregar
-    </button>
-
-    <mat-form-field appearance="outline" class="relato">
-      <mat-label>Relato del examen</mat-label>
-      <textarea matInput rows="8" formControlName="text" placeholder="Contá cómo fue el examen..."></textarea>
+    <mat-form-field appearance="outline" class="relato-field">
+      <mat-label>Contá cómo fue el examen</mat-label>
+      <textarea matInput rows="10" formControlName="text"
+        placeholder="Temas que tomaron, cómo fue la dinámica, consejos para quien lo rinda..."></textarea>
       <mat-error *ngIf="f.text.touched && f.text.invalid">Escribí un relato (mínimo 5 caracteres)</mat-error>
     </mat-form-field>
+  </div>
 
-    <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
-    <p class="success" *ngIf="successMsg">{{ successMsg }}</p>
+  <p class="message error" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <p class="message success" *ngIf="successMsg">{{ successMsg }}</p>
 
-    <div class="actions">
-      <button mat-stroked-button type="button" (click)="form.reset(); successMsg=null; errorMsg=null"
-        [disabled]="loading">
-        Cancelar
-      </button>
-      <button mat-raised-button color="accent" (click)="submit()" [disabled]="loading">
-        Guardar
-      </button>
-    </div>
+  <div class="form-actions">
+    <button mat-stroked-button type="button" (click)="form.reset(); successMsg=null; errorMsg=null"
+      [disabled]="loading">
+      Cancelar
+    </button>
+    <button mat-raised-button color="primary" (click)="submit()" [disabled]="loading">
+      <mat-icon>save</mat-icon>
+      Guardar
+    </button>
+  </div>
 
-    <div class="loading" *ngIf="loading">
-      <mat-spinner diameter="24"></mat-spinner>
-      <span>Procesando...</span>
-    </div>
-
-  </mat-card-content>
-</mat-card>
+  <div class="loading" *ngIf="loading">
+    <mat-spinner diameter="24"></mat-spinner>
+    <span>Procesando...</span>
+  </div>
+</form>

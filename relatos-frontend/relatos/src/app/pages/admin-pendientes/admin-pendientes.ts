@@ -8,11 +8,19 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { PendingExam } from '../../core/models/pending-exam.model';
 import { AdminService } from '../../core/services/admin.service';
+import { PageHeaderComponent } from '../../shared/page-header/page-header';
 
 @Component({
   selector: 'app-admin-pendientes',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    PageHeaderComponent,
+  ],
   templateUrl: './admin-pendientes.html',
   styleUrls: ['./admin-pendientes.css'],
 })

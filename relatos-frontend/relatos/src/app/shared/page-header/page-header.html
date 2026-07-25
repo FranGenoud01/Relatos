@@ -1,0 +1,9 @@
+<div class="page-header">
+  <div class="page-header-icon" *ngIf="icon()">
+    <mat-icon>{{ icon() }}</mat-icon>
+  </div>
+  <div class="page-header-text">
+    <h1>{{ title() }}</h1>
+    <p *ngIf="subtitle()">{{ subtitle() }}</p>
+  </div>
+</div>

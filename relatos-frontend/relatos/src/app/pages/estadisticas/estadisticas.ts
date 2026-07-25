@@ -1,13 +1,13 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { StatsResponse } from '../../core/models/stats.model';
 import { StatsService } from '../../core/services/stats.service';
+import { PageHeaderComponent } from '../../shared/page-header/page-header';
 
 interface KpiTile {
   label: string;
@@ -19,10 +19,10 @@ interface KpiTile {
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    PageHeaderComponent,
   ],
   templateUrl: './estadisticas.html',
   styleUrls: ['./estadisticas.css'],

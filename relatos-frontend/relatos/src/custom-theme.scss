@@ -10,12 +10,21 @@ html {
   @include mat.theme((
     color: (
       theme-type: light,
-      primary: mat.$violet-palette,
-      tertiary: mat.$orange-palette,
+      primary: mat.$cyan-palette,
+      tertiary: mat.$spring-green-palette,
     ),
     typography: Roboto,
     density: 0,
   ));
+
+  // Redondea la escala de "shape" de M3 en todos los componentes (inputs,
+  // cards, botones, chips...) para dejar el look cuadrado/genérico por defecto.
+  --mat-sys-corner-extra-small: 8px;
+  --mat-sys-corner-small: 10px;
+  --mat-sys-corner-medium: 14px;
+  --mat-sys-corner-large: 20px;
+  --mat-sys-corner-extra-large: 28px;
+  --mat-sys-corner-full: 999px;
 }
 
 // Re-declares the same theme with theme-type: dark, scoped to the class the
@@ -28,8 +37,8 @@ body.dark-theme {
   @include mat.theme((
     color: (
       theme-type: dark,
-      primary: mat.$violet-palette,
-      tertiary: mat.$orange-palette,
+      primary: mat.$cyan-palette,
+      tertiary: mat.$spring-green-palette,
     ),
   ));
 }

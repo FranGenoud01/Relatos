@@ -1,113 +1,112 @@
-/* Solo estructura y layout */
-
-mat-card.main-card {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 24px;
-  border-radius: 16px;
-  /* La sombra y el color de fondo ahora vienen de styles.css global */
-}
-
-.card-header {
+.aportar-form {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.aport-grid {
+.form-panel {
+  background-color: var(--mat-sys-surface-container);
+  border-radius: var(--mat-sys-corner-large, 20px);
+  padding: 24px;
+}
+
+.panel-title {
+  margin: 0 0 16px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.panel-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 130px;
-  gap: 24px 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
   align-items: start;
 }
 
-.materia {
-  grid-column: 1 / 2;
-}
-
-.fecha {
-  grid-column: 2 / 3;
-}
-
-.profesores {
-  grid-column: 1 / 2;
-}
-
-.nuevo-profesor {
-  grid-column: 2 / 3;
-}
-
-.btn-agregar {
-  grid-column: 3 / 4;
-  height: 56px;
-  margin-top: 0;
-  border-radius: 8px;
-  width: 100%;
-}
-
-.relato {
-  grid-column: 1 / 4;
+.panel-grid + .panel-grid {
   margin-top: 8px;
 }
 
-.actions {
-  grid-column: 1 / 4;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 32px;
+.teachers-row {
+  grid-template-columns: 1fr 1fr auto;
 }
 
-.loading,
-.error,
-.success {
-  grid-column: 1 / 4;
+.btn-agregar {
+  height: 56px;
+  border-radius: var(--mat-sys-corner-medium, 14px);
 }
 
-.success {
-  /* Puedes dejar este color fijo o moverlo a una variable si quieres */
-  color: #155724;
-  background-color: #d4edda;
-  padding: 10px;
-  border-radius: 4px;
+.relato-field {
+  width: 100%;
+}
+
+.message {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: var(--mat-sys-corner-medium, 14px);
   text-align: center;
+}
+
+.success {
+  color: #1b6e3c;
+  background-color: #def7e6;
+}
+
+:host-context(.dark-theme) .success {
+  background-color: #103a20;
+  color: #86e0a8;
 }
 
 .error {
-  color: #721c24;
-  background-color: #f8d7da;
-  padding: 10px;
-  border-radius: 4px;
-  text-align: center;
+  color: #b91c1c;
+  background-color: #fee2e2;
+}
+
+:host-context(.dark-theme) .error {
+  background-color: #450a0a;
+  color: #fca5a5;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.form-actions button mat-icon {
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-secondary, #666);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .aport-grid {
-    grid-template-columns: 1fr;
+  .form-panel {
+    padding: 16px;
   }
 
-  .materia,
-  .fecha,
-  .profesores,
-  .nuevo-profesor,
-  .relato,
-  .actions,
-  .btn-agregar {
-    grid-column: 1 / -1;
+  .panel-grid,
+  .teachers-row {
+    grid-template-columns: 1fr;
   }
 
   .btn-agregar {
     height: 48px;
-    margin-top: 8px;
+    width: 100%;
   }
 
-  .actions {
+  .form-actions {
     flex-direction: column-reverse;
   }
 
-  .actions button {
+  .form-actions button {
     width: 100%;
   }
 }

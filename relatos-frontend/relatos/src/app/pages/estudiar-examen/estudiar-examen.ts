@@ -22,6 +22,7 @@ import { SubjectService } from '../../core/services/subject.service';
 import { TeacherService } from '../../core/services/teacher.service';
 import { ExamService } from '../../core/services/exam.service';
 import { ExamRatingComponent } from '../../shared/exam-rating/exam-rating';
+import { PageHeaderComponent } from '../../shared/page-header/page-header';
 
 @Component({
   selector: 'app-estudiar-examen',
@@ -36,6 +37,7 @@ import { ExamRatingComponent } from '../../shared/exam-rating/exam-rating';
     MatIconModule,
     NgxMatSelectSearchModule, // 2. AGREGAR A LOS IMPORTS
     ExamRatingComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './estudiar-examen.html',
   styleUrls: ['./estudiar-examen.css'],

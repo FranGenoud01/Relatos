@@ -1,53 +1,48 @@
-<mat-card class="main-card">
-  <div class="card-header">
-    <h2>Estadísticas</h2>
+<app-page-header icon="bar_chart" title="Estadísticas"
+  subtitle="Un vistazo general a la actividad de la comunidad." />
+
+<div class="loading-container" *ngIf="loading()">
+  <mat-spinner diameter="32"></mat-spinner>
+</div>
+
+<div class="message-container error" *ngIf="errorMsg()">
+  <mat-icon>error_outline</mat-icon>
+  <span>{{ errorMsg() }}</span>
+</div>
+
+<ng-container *ngIf="stats() as s">
+  <div class="kpi-grid">
+    <div class="kpi-tile" *ngFor="let k of kpis()">
+      <span class="kpi-value">{{ k.value }}</span>
+      <span class="kpi-label">{{ k.label }}</span>
+    </div>
   </div>
 
-  <mat-card-content>
-    <div class="loading-container" *ngIf="loading()">
-      <mat-spinner diameter="32"></mat-spinner>
-    </div>
-
-    <div class="message-container error" *ngIf="errorMsg()">
-      <mat-icon>error_outline</mat-icon>
-      <span>{{ errorMsg() }}</span>
-    </div>
-
-    <ng-container *ngIf="stats() as s">
-      <div class="kpi-grid">
-        <div class="kpi-tile" *ngFor="let k of kpis()">
-          <span class="kpi-value">{{ k.value }}</span>
-          <span class="kpi-label">{{ k.label }}</span>
-        </div>
+  <section class="stat-panel">
+    <h3>Relatos por materia</h3>
+    <div class="bar-row" *ngFor="let sub of s.bySubject"
+      [matTooltip]="sub.name + ': ' + sub.exam_count + ' relato' + (sub.exam_count === 1 ? '' : 's')">
+      <span class="bar-label">{{ sub.name }}</span>
+      <div class="bar-track">
+        <div class="bar-fill" [style.width.%]="barWidth(sub.exam_count, subjectMax())"></div>
       </div>
+      <span class="bar-value">{{ sub.exam_count }}</span>
+      <span class="bar-empty-flag" *ngIf="sub.exam_count === 0">
+        <mat-icon class="tiny-icon">info_outline</mat-icon>
+        Sin relatos
+      </span>
+    </div>
+  </section>
 
-      <section class="stat-section">
-        <h3>Relatos por materia</h3>
-        <div class="bar-row" *ngFor="let sub of s.bySubject"
-          [matTooltip]="sub.name + ': ' + sub.exam_count + ' relato' + (sub.exam_count === 1 ? '' : 's')">
-          <span class="bar-label">{{ sub.name }}</span>
-          <div class="bar-track">
-            <div class="bar-fill" [style.width.%]="barWidth(sub.exam_count, subjectMax())"></div>
-          </div>
-          <span class="bar-value">{{ sub.exam_count }}</span>
-          <span class="bar-empty-flag" *ngIf="sub.exam_count === 0">
-            <mat-icon class="tiny-icon">info_outline</mat-icon>
-            Sin relatos
-          </span>
-        </div>
-      </section>
-
-      <section class="stat-section">
-        <h3>Relatos por profesor</h3>
-        <div class="bar-row" *ngFor="let t of s.byTeacher"
-          [matTooltip]="t.name + ': ' + t.exam_count + ' relato' + (t.exam_count === 1 ? '' : 's')">
-          <span class="bar-label">{{ t.name }}</span>
-          <div class="bar-track">
-            <div class="bar-fill" [style.width.%]="barWidth(t.exam_count, teacherMax())"></div>
-          </div>
-          <span class="bar-value">{{ t.exam_count }}</span>
-        </div>
-      </section>
-    </ng-container>
-  </mat-card-content>
-</mat-card>
+  <section class="stat-panel">
+    <h3>Relatos por profesor</h3>
+    <div class="bar-row" *ngFor="let t of s.byTeacher"
+      [matTooltip]="t.name + ': ' + t.exam_count + ' relato' + (t.exam_count === 1 ? '' : 's')">
+      <span class="bar-label">{{ t.name }}</span>
+      <div class="bar-track">
+        <div class="bar-fill" [style.width.%]="barWidth(t.exam_count, teacherMax())"></div>
+      </div>
+      <span class="bar-value">{{ t.exam_count }}</span>
+    </div>
+  </section>
+</ng-container>

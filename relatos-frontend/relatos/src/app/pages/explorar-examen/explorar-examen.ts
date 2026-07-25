@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -21,6 +20,7 @@ import { SubjectService } from '../../core/services/subject.service';
 import { TeacherService } from '../../core/services/teacher.service';
 import { ExamService } from '../../core/services/exam.service';
 import { ExamRatingComponent } from '../../shared/exam-rating/exam-rating';
+import { PageHeaderComponent } from '../../shared/page-header/page-header';
 
 @Component({
   selector: 'app-explorar-examen',
@@ -28,7 +28,6 @@ import { ExamRatingComponent } from '../../shared/exam-rating/exam-rating';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -38,6 +37,7 @@ import { ExamRatingComponent } from '../../shared/exam-rating/exam-rating';
     MatExpansionModule,
     NgxMatSelectSearchModule,
     ExamRatingComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './explorar-examen.html',
   styleUrls: ['./explorar-examen.css'],
