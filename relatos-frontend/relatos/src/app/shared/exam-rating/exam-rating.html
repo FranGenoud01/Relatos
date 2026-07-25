@@ -1,0 +1,61 @@
+<div class="rating-block">
+  <div class="loading-row" *ngIf="loading()">
+    <mat-spinner diameter="20"></mat-spinner>
+  </div>
+
+  <div class="message-container error" *ngIf="errorMsg()">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ errorMsg() }}</span>
+  </div>
+
+  <ng-container *ngIf="summary() as s">
+    <div class="rating-summary">
+      <div class="stars-display">
+        <mat-icon *ngFor="let i of stars" [class.filled]="s.average !== null && i <= round(s.average)">
+          star
+        </mat-icon>
+      </div>
+      <span class="avg-text" *ngIf="s.average !== null">{{ s.average | number: '1.1-1' }}</span>
+      <span class="count-text">({{ s.count }} {{ s.count === 1 ? 'valoración' : 'valoraciones' }})</span>
+    </div>
+
+    <ng-container *ngIf="currentUser() as user; else loginHint">
+      <div class="my-rating">
+        <span class="my-rating-label">Tu valoración:</span>
+        <button *ngFor="let i of stars" mat-icon-button type="button" (click)="rate(i)"
+          [disabled]="submittingRating()" [attr.aria-label]="'Calificar con ' + i + ' estrellas'">
+          <mat-icon [class.filled]="s.myRating !== null && i <= s.myRating!">star</mat-icon>
+        </button>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #loginHint>
+    <p class="login-hint"><a routerLink="/login">Iniciá sesión</a> para valorar y comentar este relato.</p>
+  </ng-template>
+
+  <div class="comments-section">
+    <h4>Comentarios ({{ comments().length }})</h4>
+
+    <div class="comment" *ngFor="let c of comments()">
+      <div class="comment-header">
+        <strong>{{ c.author_name }}</strong>
+        <span class="comment-date">{{ c.created_at | date: 'short' }}</span>
+      </div>
+      <p class="comment-text">{{ c.text }}</p>
+    </div>
+
+    <p class="empty-comments" *ngIf="comments().length === 0">Todavía no hay comentarios.</p>
+
+    <div class="new-comment" *ngIf="currentUser()">
+      <mat-form-field appearance="outline" class="comment-input">
+        <mat-label>Agregar un comentario</mat-label>
+        <textarea matInput [formControl]="newCommentCtrl" rows="2"></textarea>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="button" (click)="submitComment()"
+        [disabled]="submittingComment()">
+        Comentar
+      </button>
+    </div>
+  </div>
+</div>

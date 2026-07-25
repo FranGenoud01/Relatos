@@ -75,6 +75,8 @@
           <span class="teachers-text">Profesores: {{ currentExam.teachers || 'No registrados' }}</span>
         </mat-card-footer>
       </mat-card>
+
+      <app-exam-rating [examId]="currentExam.id" />
     </ng-container>
 
   </mat-card-content>

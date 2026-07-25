@@ -21,6 +21,7 @@ import { ExamRandom } from '../../core/models/exam-random.model';
 import { SubjectService } from '../../core/services/subject.service';
 import { TeacherService } from '../../core/services/teacher.service';
 import { ExamService } from '../../core/services/exam.service';
+import { ExamRatingComponent } from '../../shared/exam-rating/exam-rating';
 
 @Component({
   selector: 'app-estudiar-examen',
@@ -34,6 +35,7 @@ import { ExamService } from '../../core/services/exam.service';
     MatProgressSpinnerModule,
     MatIconModule,
     NgxMatSelectSearchModule, // 2. AGREGAR A LOS IMPORTS
+    ExamRatingComponent,
   ],
   templateUrl: './estudiar-examen.html',
   styleUrls: ['./estudiar-examen.css'],

@@ -20,6 +20,7 @@ import { ExamListItem } from '../../core/models/exam-list-item.model';
 import { SubjectService } from '../../core/services/subject.service';
 import { TeacherService } from '../../core/services/teacher.service';
 import { ExamService } from '../../core/services/exam.service';
+import { ExamRatingComponent } from '../../shared/exam-rating/exam-rating';
 
 @Component({
   selector: 'app-explorar-examen',
@@ -36,6 +37,7 @@ import { ExamService } from '../../core/services/exam.service';
     MatPaginatorModule,
     MatExpansionModule,
     NgxMatSelectSearchModule,
+    ExamRatingComponent,
   ],
   templateUrl: './explorar-examen.html',
   styleUrls: ['./explorar-examen.css'],

@@ -1,0 +1,150 @@
+.rating-block {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:host-context(.dark-theme) .rating-block {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.loading-row {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.message-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+:host-context(.dark-theme) .error {
+  background-color: #450a0a;
+  color: #fca5a5;
+}
+
+.rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stars-display,
+.my-rating {
+  display: flex;
+  align-items: center;
+}
+
+.stars-display mat-icon {
+  color: rgba(0, 0, 0, 0.25);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+:host-context(.dark-theme) .stars-display mat-icon {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.stars-display mat-icon.filled {
+  color: #f5b301;
+}
+
+.avg-text {
+  font-weight: 600;
+}
+
+.count-text {
+  color: var(--text-secondary, #777);
+  font-size: 0.9rem;
+}
+
+.my-rating {
+  margin-top: 4px;
+  gap: 2px;
+}
+
+.my-rating-label {
+  margin-right: 4px;
+  color: var(--text-secondary, #777);
+  font-size: 0.9rem;
+}
+
+.my-rating button mat-icon {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+:host-context(.dark-theme) .my-rating button mat-icon {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.my-rating button mat-icon.filled {
+  color: #f5b301;
+}
+
+.login-hint {
+  margin: 8px 0;
+  color: var(--text-secondary, #777);
+  font-size: 0.9rem;
+}
+
+.comments-section {
+  margin-top: 16px;
+}
+
+.comments-section h4 {
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+
+.comment {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+:host-context(.dark-theme) .comment {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.comment-date {
+  color: var(--text-secondary, #999);
+  font-size: 0.8rem;
+}
+
+.comment-text {
+  margin: 4px 0 0;
+  white-space: pre-wrap;
+}
+
+.empty-comments {
+  color: var(--text-secondary, #777);
+  font-size: 0.9rem;
+}
+
+.new-comment {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.comment-input {
+  width: 100%;
+}

@@ -60,11 +60,15 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <p class="exam-text">{{ exam.text }}</p>
-        <p class="teachers-text">
-          <mat-icon class="tiny-icon">person</mat-icon>
-          Profesores: {{ exam.teachers || 'No registrados' }}
-        </p>
+        <ng-template matExpansionPanelContent>
+          <p class="exam-text">{{ exam.text }}</p>
+          <p class="teachers-text">
+            <mat-icon class="tiny-icon">person</mat-icon>
+            Profesores: {{ exam.teachers || 'No registrados' }}
+          </p>
+
+          <app-exam-rating [examId]="exam.id" />
+        </ng-template>
       </mat-expansion-panel>
     </mat-accordion>
 
