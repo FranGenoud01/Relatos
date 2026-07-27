@@ -8,6 +8,7 @@ import { LoginComponent } from './pages/login/login';
 import { RegisterComponent } from './pages/register/register';
 import { AdminPendientesComponent } from './pages/admin-pendientes/admin-pendientes';
 import { adminGuard } from './core/guards/admin.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'estudiar' },
@@ -17,6 +18,13 @@ export const routes: Routes = [
   { path: 'estadisticas', component: EstadisticasComponent, title: 'Estadísticas · Relatos' },
   { path: 'login', component: LoginComponent, title: 'Ingresar · Relatos' },
   { path: 'registro', component: RegisterComponent, title: 'Crear cuenta · Relatos' },
+  {
+    path: 'mis-aportes',
+    loadComponent: () =>
+      import('./pages/mis-aportes/mis-aportes').then((m) => m.MisAportesComponent),
+    canActivate: [authGuard],
+    title: 'Mis aportes · Relatos',
+  },
   {
     path: 'admin/pendientes',
     component: AdminPendientesComponent,

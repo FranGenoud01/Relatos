@@ -163,6 +163,27 @@ export async function findCandidateExamsBySubjectRepo(
   return rows as { id: number; text: string }[];
 }
 
+export async function findExamsByUserRepo(userId: number) {
+  const [rows] = await pool.query(
+    `
+    SELECT
+      e.id, e.title, e.text, DATE_FORMAT(e.date_exam, '%Y-%m-%d') AS date_exam,
+      e.status, e.created_at,
+      m.name AS subject_name,
+      GROUP_CONCAT(DISTINCT p.name SEPARATOR ', ') AS teachers
+    FROM exams e
+    JOIN subjects m ON e.subject_id = m.id
+    LEFT JOIN exam_teacher rp ON rp.exam_id = e.id
+    LEFT JOIN teachers p ON p.id = rp.teacher_id
+    WHERE e.created_by = ? AND e.deleted_at IS NULL
+    GROUP BY e.id, e.title, e.text, e.date_exam, e.status, e.created_at, m.name
+    ORDER BY e.created_at DESC
+    `,
+    [userId]
+  );
+  return rows;
+}
+
 export async function findPendingExamsRepo() {
   const [rows] = await pool.query(`
     SELECT

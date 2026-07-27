@@ -3,6 +3,7 @@ import {
   createExamService,
   getRandomExamService,
   findAllExamsService,
+  getMyExamsService,
 } from './exam.service';
 
 export async function createExamController(req: Request, res: Response) {
@@ -57,6 +58,16 @@ export async function getRandomExamController(req: Request, res: Response) {
     return res
       .status(500)
       .json({ message: 'Error al obtener relato aleatorio' });
+  }
+}
+
+export async function getMyExamsController(req: Request, res: Response) {
+  try {
+    const items = await getMyExamsService(req.userId!);
+    res.json({ items });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al obtener tus relatos' });
   }
 }
 

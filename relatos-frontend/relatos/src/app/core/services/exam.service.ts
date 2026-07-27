@@ -5,6 +5,7 @@ import { API_BASE_URL } from './api.config';
 import { ExamRandom } from '../models/exam-random.model';
 import { CreateExamPayload } from '../models/exam-create.model';
 import { ExamListQuery, ExamListResponse } from '../models/exam-list-item.model';
+import { MyExam } from '../models/my-exam.model';
 
 @Injectable({ providedIn: 'root' })
 export class ExamService {
@@ -44,5 +45,9 @@ export class ExamService {
 
   create(payload: CreateExamPayload): Observable<any> {
     return this.http.post(`${API_BASE_URL}/exams`, payload);
+  }
+
+  getMine(): Observable<{ items: MyExam[] }> {
+    return this.http.get<{ items: MyExam[] }>(`${API_BASE_URL}/exams/mine`);
   }
 }

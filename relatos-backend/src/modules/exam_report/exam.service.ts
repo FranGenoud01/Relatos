@@ -6,6 +6,7 @@ import {
   FindAllExamsParams,
   findCandidateExamsBySubjectRepo,
   findDeletedExamsRepo,
+  findExamsByUserRepo,
   findPendingExamsRepo,
   restoreExamRepo,
   softDeleteExamRepo,
@@ -47,6 +48,10 @@ export async function createExamService(dto: CreateExamDTO) {
 
 export async function getPendingExamsService() {
   return findPendingExamsRepo();
+}
+
+export async function getMyExamsService(userId: number) {
+  return findExamsByUserRepo(userId);
 }
 
 export async function moderateExamService(

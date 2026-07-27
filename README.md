@@ -14,6 +14,7 @@ El proyecto está dividido en **backend** (Node.js + TypeScript + MySQL) y **fro
 - Filtro opcional por **profesor**
 - Obtención de relatos **aleatorios**
 - Evita repetir relatos en una misma sesión (por materia/profesor)
+- Botón para **copiar el relato** al portapapeles
 - Visualización de:
   - Materia
   - Fecha del examen
@@ -25,6 +26,7 @@ El proyecto está dividido en **backend** (Node.js + TypeScript + MySQL) y **fro
 - Listado y búsqueda de relatos con **paginación**
 - Filtro por materia, profesor y texto libre
 - Valoración con **estrellas** y **comentarios** por relato (requiere cuenta)
+- Botón para **copiar el relato** al portapapeles
 
 ### ✍️ Aportar
 
@@ -38,12 +40,14 @@ El proyecto está dividido en **backend** (Node.js + TypeScript + MySQL) y **fro
 - Relación muchos-a-muchos entre relatos y profesores
 - Login **opcional**: se puede aportar como anónimo o autenticado (el relato queda atribuido al usuario si inició sesión)
 - **Detección de relatos parecidos**: si un nuevo relato es muy similar a uno existente de la misma materia, queda en estado *pendiente* para revisión en vez de publicarse directamente
+- Confirmación visual (snackbar) al guardar, indicando si el relato quedó publicado o pendiente de revisión
 
 ### 👤 Cuentas de usuario
 
 - Registro e inicio de sesión con **JWT**
 - Sesión persistida en el cliente e interceptor HTTP que adjunta el token
 - Autenticación opcional en endpoints públicos y obligatoria en acciones que la requieren (valorar, comentar, moderar)
+- **Mis aportes**: pantalla donde el usuario logueado ve sus propios relatos y el estado de cada uno (publicado, en revisión o rechazado)
 
 ### 📊 Estadísticas
 
@@ -80,7 +84,7 @@ El proyecto está dividido en **backend** (Node.js + TypeScript + MySQL) y **fro
 - **Angular (standalone components)**
 - **Angular Material**
 - **Reactive Forms**
-- Rutas protegidas con **guards** (`admin.guard`) para las secciones de administración
+- Rutas protegidas con **guards** (`auth.guard`, `admin.guard`) para secciones que requieren login o rol de administrador
 - **Interceptor HTTP** para adjuntar el token de autenticación
 - Comunicación con backend mediante **HttpClient**
 - Manejo reactivo de estado (`Observable`, `BehaviorSubject`)

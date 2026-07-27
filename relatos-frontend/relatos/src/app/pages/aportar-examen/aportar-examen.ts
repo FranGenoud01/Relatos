@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 // 1. IMPORTAR MODULO DE BÚSQUEDA
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -49,6 +50,7 @@ type AportarForm = FormGroup<{
     MatDatepickerModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
     NgxMatSelectSearchModule, // 2. AGREGAR A IMPORTS
     PageHeaderComponent,
   ],
@@ -74,7 +76,8 @@ export class AportarExamenComponent implements OnInit {
     private subjectService: SubjectService,
     private teacherService: TeacherService,
     private examService: ExamService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private snackBar: MatSnackBar
   ) {
     this.form = this.fb.group({
       subject_id: this.fb.control<number | null>(null, [Validators.required]),
@@ -198,10 +201,19 @@ export class AportarExamenComponent implements OnInit {
     this.examService.create(payload).subscribe({
       next: (res) => {
         setTimeout(() => {
-          this.successMsg =
-            res?.status === 'pending'
-              ? '🕓 Encontramos un relato parecido: el tuyo va a quedar pendiente de revisión antes de publicarse.'
-              : '✅ Relato guardado';
+          const isPending = res?.status === 'pending';
+          this.successMsg = isPending
+            ? '🕓 Encontramos un relato parecido: el tuyo va a quedar pendiente de revisión antes de publicarse.'
+            : '✅ Relato guardado';
+
+          this.snackBar.open(
+            isPending
+              ? 'Relato enviado: queda pendiente de revisión'
+              : '¡Relato publicado con éxito!',
+            'Cerrar',
+            { duration: 4000 }
+          );
+
           this.loading = false;
 
           this.form.reset({

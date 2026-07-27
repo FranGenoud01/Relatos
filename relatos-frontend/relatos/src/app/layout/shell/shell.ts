@@ -56,14 +56,24 @@ export class ShellComponent {
   });
 
   readonly navLinks = computed<NavLink[]>(() => {
-    if (this.currentUser()?.isAdmin) {
-      return [
-        ...this.baseNavLinks,
-        { path: '/admin/pendientes', label: 'Moderación', icon: 'fact_check' },
-        { path: '/admin/contenido', label: 'Contenido', icon: 'delete_sweep' },
-      ];
+    const user = this.currentUser();
+    if (!user) {
+      return this.baseNavLinks;
     }
-    return this.baseNavLinks;
+
+    const links = [
+      ...this.baseNavLinks,
+      { path: '/mis-aportes', label: 'Mis aportes', icon: 'folder_shared' },
+    ];
+
+    if (user.isAdmin) {
+      links.push(
+        { path: '/admin/pendientes', label: 'Moderación', icon: 'fact_check' },
+        { path: '/admin/contenido', label: 'Contenido', icon: 'delete_sweep' }
+      );
+    }
+
+    return links;
   });
 
   readonly isMobile$: Observable<boolean> = this.breakpointObserver

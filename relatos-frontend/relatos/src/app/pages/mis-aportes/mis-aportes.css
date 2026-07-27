@@ -1,0 +1,116 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0;
+}
+
+.message-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: var(--mat-sys-corner-medium, 14px);
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+:host-context(.dark-theme) .error {
+  background-color: #450a0a;
+  color: #fca5a5;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--text-secondary, #666);
+}
+
+.aporte-item {
+  margin-bottom: 16px;
+  padding: 20px;
+  border-radius: var(--mat-sys-corner-large, 20px);
+  background-color: var(--mat-sys-surface-container);
+  box-shadow: none;
+}
+
+.aporte-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.aporte-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.aporte-meta {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #777);
+}
+
+.aporte-text {
+  white-space: pre-wrap;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.status-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--mat-sys-corner-full, 999px);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge .tiny-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.status-approved {
+  background-color: rgba(22, 163, 74, 0.15);
+  color: #15803d;
+}
+
+.status-pending {
+  background-color: rgba(245, 179, 1, 0.15);
+  color: #8a6200;
+}
+
+.status-rejected {
+  background-color: rgba(220, 38, 38, 0.12);
+  color: #b91c1c;
+}
+
+:host-context(.dark-theme) .status-approved {
+  background-color: rgba(22, 163, 74, 0.2);
+  color: #86efac;
+}
+
+:host-context(.dark-theme) .status-pending {
+  background-color: rgba(245, 179, 1, 0.2);
+  color: #f5d061;
+}
+
+:host-context(.dark-theme) .status-rejected {
+  background-color: rgba(220, 38, 38, 0.2);
+  color: #fca5a5;
+}
+
+@media (max-width: 700px) {
+  .aporte-header {
+    flex-direction: column;
+  }
+}

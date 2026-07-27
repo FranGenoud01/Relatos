@@ -61,11 +61,19 @@
   line-height: 1.6;
 }
 
+.teachers-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .teachers-text {
   display: flex;
   align-items: center;
   gap: 8px;
   color: var(--text-secondary, #777);
+  margin: 0;
 }
 
 .tiny-icon {

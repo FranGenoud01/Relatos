@@ -91,6 +91,10 @@
   color: var(--text-secondary, #777);
 }
 
+.exam-footer .spacer {
+  flex: 1;
+}
+
 .tiny-icon {
   font-size: 18px;
   width: 18px;

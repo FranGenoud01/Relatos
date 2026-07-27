@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { Subject } from '../../core/models/subject.model';
@@ -35,6 +37,8 @@ import { PageHeaderComponent } from '../../shared/page-header/page-header';
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatExpansionModule,
+    MatSnackBarModule,
+    MatTooltipModule,
     NgxMatSelectSearchModule,
     ExamRatingComponent,
     PageHeaderComponent,
@@ -64,7 +68,8 @@ export class ExplorarExamenComponent implements OnInit {
   constructor(
     private subjectService: SubjectService,
     private teacherService: TeacherService,
-    private examService: ExamService
+    private examService: ExamService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -140,5 +145,11 @@ export class ExplorarExamenComponent implements OnInit {
           this.loading.set(false);
         },
       });
+  }
+
+  copyText(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      this.snackBar.open('Relato copiado al portapapeles', 'Cerrar', { duration: 2500 });
+    });
   }
 }

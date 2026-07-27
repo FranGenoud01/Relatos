@@ -10,6 +10,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // 1. IMPORTAR EL MÓDULO DE BÚSQUEDA
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -35,6 +37,8 @@ import { PageHeaderComponent } from '../../shared/page-header/page-header';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatIconModule,
+    MatSnackBarModule,
+    MatTooltipModule,
     NgxMatSelectSearchModule, // 2. AGREGAR A LOS IMPORTS
     ExamRatingComponent,
     PageHeaderComponent,
@@ -64,7 +68,8 @@ export class EstudiarExamenComponent implements OnInit {
   constructor(
     private subjectService: SubjectService,
     private teacherService: TeacherService,
-    private examService: ExamService
+    private examService: ExamService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -160,5 +165,11 @@ export class EstudiarExamenComponent implements OnInit {
 
     this.exam$ = undefined;
     this.errorMsg = null;
+  }
+
+  copyText(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      this.snackBar.open('Relato copiado al portapapeles', 'Cerrar', { duration: 2500 });
+    });
   }
 }

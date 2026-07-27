@@ -1,0 +1,33 @@
+<app-page-header icon="folder_shared" title="Mis aportes"
+  subtitle="Los relatos que aportaste y el estado de cada uno." />
+
+<div class="loading-container" *ngIf="loading()">
+  <mat-spinner diameter="32"></mat-spinner>
+</div>
+
+<div class="message-container error" *ngIf="errorMsg()">
+  <mat-icon>error_outline</mat-icon>
+  <span>{{ errorMsg() }}</span>
+</div>
+
+<p class="empty-state" *ngIf="!loading() && !errorMsg() && items().length === 0">
+  Todavía no aportaste ningún relato.
+</p>
+
+<mat-card class="aporte-item" *ngFor="let item of items()">
+  <div class="aporte-header">
+    <div class="aporte-title">
+      <strong>{{ item.subject_name }}</strong>
+      <span class="aporte-meta">
+        {{ item.date_exam ? (item.date_exam | date: 'mediumDate') : 'Fecha desconocida' }}
+        · Profesores: {{ item.teachers || 'No registrados' }}
+      </span>
+    </div>
+    <span class="status-badge" [class]="'status-' + item.status">
+      <mat-icon class="tiny-icon">{{ statusIcon(item.status) }}</mat-icon>
+      {{ statusLabel(item.status) }}
+    </span>
+  </div>
+
+  <p class="aporte-text">{{ item.text }}</p>
+</mat-card>
