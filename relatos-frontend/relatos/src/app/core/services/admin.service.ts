@@ -6,6 +6,7 @@ import { API_BASE_URL } from './api.config';
 import { PendingExam } from '../models/pending-exam.model';
 import { DeletedExam } from '../models/deleted-exam.model';
 import { DeletedTeacher } from '../models/deleted-teacher.model';
+import { OpenReport } from '../models/report.model';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -54,5 +55,13 @@ export class AdminService {
       `${API_BASE_URL}/admin/teachers/${teacherId}/restore`,
       {}
     );
+  }
+
+  getOpenReports(): Observable<{ items: OpenReport[] }> {
+    return this.http.get<{ items: OpenReport[] }>(`${API_BASE_URL}/admin/reports`);
+  }
+
+  dismissReport(reportId: number): Observable<{ id: number }> {
+    return this.http.post<{ id: number }>(`${API_BASE_URL}/admin/reports/${reportId}/dismiss`, {});
   }
 }

@@ -13,6 +13,7 @@ import {
   updateExamStatusRepo,
 } from './exam.repository';
 import { findMostSimilarExam, SIMILARITY_THRESHOLD } from './similarity';
+import { resolveReportsForExamRepo } from '../report/report.repository';
 
 export async function createExamService(dto: CreateExamDTO) {
   if (!dto.subjectId || !dto.text || !dto.text.trim()) {
@@ -99,6 +100,8 @@ export async function softDeleteExamService(id: number, deletedBy: number): Prom
   if (!deleted) {
     throw new Error('NOT_FOUND');
   }
+
+  await resolveReportsForExamRepo(id, deletedBy);
 }
 
 export async function restoreExamService(id: number): Promise<void> {

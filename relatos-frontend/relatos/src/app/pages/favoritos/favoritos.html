@@ -1,0 +1,31 @@
+<app-page-header icon="favorite" title="Favoritos"
+  subtitle="Los relatos que guardaste para volver a repasarlos." />
+
+<div class="loading-container" *ngIf="loading()">
+  <mat-spinner diameter="32"></mat-spinner>
+</div>
+
+<div class="message-container error" *ngIf="errorMsg()">
+  <mat-icon>error_outline</mat-icon>
+  <span>{{ errorMsg() }}</span>
+</div>
+
+<p class="empty-state" *ngIf="!loading() && !errorMsg() && items().length === 0">
+  Todavía no guardaste ningún relato en favoritos.
+</p>
+
+<mat-card class="favorito-item" *ngFor="let item of items()">
+  <div class="favorito-header">
+    <div class="favorito-title">
+      <strong>{{ item.subject_name }}</strong>
+      <span class="favorito-meta">
+        {{ item.date_exam ? (item.date_exam | date: 'mediumDate') : 'Fecha desconocida' }}
+        · Profesores: {{ item.teachers || 'No registrados' }}
+      </span>
+    </div>
+    <app-exam-favorite [examId]="item.id" [initialValue]="true"
+      (favoriteChanged)="onFavoriteChanged(item.id, $event)" />
+  </div>
+
+  <p class="favorito-text">{{ item.text }}</p>
+</mat-card>

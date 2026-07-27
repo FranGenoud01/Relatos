@@ -26,6 +26,12 @@ export const routes: Routes = [
     title: 'Mis aportes · Relatos',
   },
   {
+    path: 'favoritos',
+    loadComponent: () => import('./pages/favoritos/favoritos').then((m) => m.FavoritosComponent),
+    canActivate: [authGuard],
+    title: 'Favoritos · Relatos',
+  },
+  {
     path: 'admin/pendientes',
     component: AdminPendientesComponent,
     canActivate: [adminGuard],

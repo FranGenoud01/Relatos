@@ -15,6 +15,8 @@ El proyecto está dividido en **backend** (Node.js + TypeScript + MySQL) y **fro
 - Obtención de relatos **aleatorios**
 - Evita repetir relatos en una misma sesión (por materia/profesor)
 - Botón para **copiar el relato** al portapapeles
+- Guardar/quitar de **favoritos** (requiere cuenta)
+- Botón para **reportar** un relato (duplicado, materia/profesor incorrecto, contenido inapropiado, otro)
 - Visualización de:
   - Materia
   - Fecha del examen
@@ -25,8 +27,11 @@ El proyecto está dividido en **backend** (Node.js + TypeScript + MySQL) y **fro
 
 - Listado y búsqueda de relatos con **paginación**
 - Filtro por materia, profesor y texto libre
+- El término buscado queda **resaltado** dentro del texto de cada relato
 - Valoración con **estrellas** y **comentarios** por relato (requiere cuenta)
 - Botón para **copiar el relato** al portapapeles
+- Guardar/quitar de **favoritos** (requiere cuenta)
+- Botón para **reportar** un relato
 
 ### ✍️ Aportar
 
@@ -48,6 +53,7 @@ El proyecto está dividido en **backend** (Node.js + TypeScript + MySQL) y **fro
 - Sesión persistida en el cliente e interceptor HTTP que adjunta el token
 - Autenticación opcional en endpoints públicos y obligatoria en acciones que la requieren (valorar, comentar, moderar)
 - **Mis aportes**: pantalla donde el usuario logueado ve sus propios relatos y el estado de cada uno (publicado, en revisión o rechazado)
+- **Favoritos**: pantalla con los relatos que el usuario guardó para volver a repasarlos
 
 ### 📊 Estadísticas
 
@@ -57,6 +63,7 @@ El proyecto está dividido en **backend** (Node.js + TypeScript + MySQL) y **fro
 ### 🛡️ Panel de administración
 
 - **Cola de moderación**: aprobar o rechazar relatos marcados como parecidos/duplicados
+- **Cola de reportes**: revisar relatos reportados por usuarios, descartar el reporte o eliminar el relato
 - **Gestión de contenido**: borrado lógico (*soft delete*) de relatos y profesores, con papelera para **restaurar** lo eliminado
 - Acceso restringido a usuarios con rol de administrador (`isAdmin`)
 
@@ -71,7 +78,7 @@ El proyecto está dividido en **backend** (Node.js + TypeScript + MySQL) y **fro
 - **Express**
 - **MySQL** (MySQL Workbench)
 - Arquitectura por capas y modular (`controller` → `service` → `repository`) por dominio:
-  - `subject`, `teacher`, `exam_report`, `auth`, `rating`, `comment`, `stats`, `admin`
+  - `subject`, `teacher`, `exam_report`, `auth`, `rating`, `comment`, `favorite`, `report`, `stats`, `admin`
 - Autenticación con **JWT** (`jsonwebtoken`) y hashing de contraseñas con **bcrypt**
 - Middlewares de autenticación (`requireAuth`, `optionalAuth`, `requireAdmin`)
 - Detección de similitud de texto por trigramas + índice de Jaccard (`similarity.ts`) para moderación de duplicados
@@ -141,9 +148,25 @@ El proyecto está dividido en **backend** (Node.js + TypeScript + MySQL) y **fro
   - stars
 
 - **exam_comments**
+
   - exam_id
   - user_id
   - text
+  - created_at
+
+- **exam_favorites**
+
+  - exam_id
+  - user_id
+  - created_at
+
+- **exam_reports**
+  - exam_id
+  - reporter_id
+  - reason _(`duplicado` / `materia_o_profesor_incorrecto` / `contenido_inapropiado` / `otro`)_
+  - comment
+  - status _(`open` / `resolved`)_
+  - resolved_at, resolved_by
   - created_at
 
 ---

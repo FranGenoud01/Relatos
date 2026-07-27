@@ -11,6 +11,7 @@ import {
   restoreTeacherController,
 } from './admin.controller';
 import { requireAdmin, requireAuth } from '../auth/auth.middleware';
+import { dismissReportController, getOpenReportsController } from '../report/report.controller';
 
 export const adminRouter = Router();
 
@@ -25,3 +26,6 @@ adminRouter.post('/exams/:id/restore', requireAuth, requireAdmin, restoreExamCon
 adminRouter.get('/teachers/deleted', requireAuth, requireAdmin, getDeletedTeachersController);
 adminRouter.delete('/teachers/:id', requireAuth, requireAdmin, deleteTeacherController);
 adminRouter.post('/teachers/:id/restore', requireAuth, requireAdmin, restoreTeacherController);
+
+adminRouter.get('/reports', requireAuth, requireAdmin, getOpenReportsController);
+adminRouter.post('/reports/:id/dismiss', requireAuth, requireAdmin, dismissReportController);

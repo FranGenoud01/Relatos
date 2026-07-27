@@ -1,0 +1,28 @@
+.hint {
+  color: var(--text-secondary, #666);
+  margin-top: 0;
+}
+
+.reason-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.comment-field {
+  width: 100%;
+}
+
+.error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+
+:host-context(.dark-theme) .error {
+  color: #fca5a5;
+}
+
+mat-dialog-actions button mat-spinner {
+  display: inline-block;
+}

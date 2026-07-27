@@ -60,16 +60,23 @@
     </mat-expansion-panel-header>
 
     <ng-template matExpansionPanelContent>
-      <p class="exam-text">{{ exam.text }}</p>
+      <p class="exam-text" [innerHTML]="exam.text | highlight: searchTerm()"></p>
       <div class="teachers-row">
         <p class="teachers-text">
           <mat-icon class="tiny-icon">person</mat-icon>
           Profesores: {{ exam.teachers || 'No registrados' }}
         </p>
-        <button mat-icon-button (click)="copyText(exam.text)" matTooltip="Copiar relato"
-          aria-label="Copiar relato al portapapeles">
-          <mat-icon>content_copy</mat-icon>
-        </button>
+        <div class="actions-row">
+          <app-exam-favorite [examId]="exam.id" />
+          <button mat-icon-button (click)="copyText(exam.text)" matTooltip="Copiar relato"
+            aria-label="Copiar relato al portapapeles">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+          <button mat-icon-button (click)="reportExam(exam.id)" matTooltip="Reportar relato"
+            aria-label="Reportar relato">
+            <mat-icon>flag</mat-icon>
+          </button>
+        </div>
       </div>
 
       <app-exam-rating [examId]="exam.id" />

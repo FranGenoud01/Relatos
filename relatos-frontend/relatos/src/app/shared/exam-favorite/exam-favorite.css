@@ -1,0 +1,11 @@
+button mat-icon {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+:host-context(.dark-theme) button mat-icon {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+button mat-icon.filled {
+  color: #e0245e;
+}

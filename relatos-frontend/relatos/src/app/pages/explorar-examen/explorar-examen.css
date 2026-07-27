@@ -68,6 +68,22 @@
   gap: 8px;
 }
 
+.actions-row {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.exam-text mark {
+  background-color: #fde68a;
+  color: inherit;
+  border-radius: 2px;
+}
+
+:host-context(.dark-theme) .exam-text mark {
+  background-color: #78350f;
+}
+
 .teachers-text {
   display: flex;
   align-items: center;

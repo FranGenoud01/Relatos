@@ -13,6 +13,7 @@ import { ExamListItem } from '../../core/models/exam-list-item.model';
 import { DeletedExam } from '../../core/models/deleted-exam.model';
 import { Teacher } from '../../core/models/teacher.model';
 import { DeletedTeacher } from '../../core/models/deleted-teacher.model';
+import { OpenReport, REPORT_REASON_OPTIONS } from '../../core/models/report.model';
 
 import { AdminService } from '../../core/services/admin.service';
 import { ExamService } from '../../core/services/exam.service';
@@ -66,6 +67,15 @@ export class AdminContenidoComponent implements OnInit {
   deletedTeachersError = signal<string | null>(null);
   deletedTeachersProcessingId = signal<number | null>(null);
 
+  reports = signal<OpenReport[]>([]);
+  reportsLoading = signal(false);
+  reportsError = signal<string | null>(null);
+  reportsProcessingId = signal<number | null>(null);
+
+  readonly reasonLabels = Object.fromEntries(
+    REPORT_REASON_OPTIONS.map((opt) => [opt.value, opt.label])
+  );
+
   constructor(
     private adminService: AdminService,
     private examService: ExamService,
@@ -75,6 +85,7 @@ export class AdminContenidoComponent implements OnInit {
   ngOnInit(): void {
     this.fetchExams();
     this.fetchTeachers();
+    this.fetchReports();
   }
 
   setExamsView(view: ExamsView): void {
@@ -219,6 +230,50 @@ export class AdminContenidoComponent implements OnInit {
         this.deletedTeachersProcessingId.set(null);
       },
       error: () => this.deletedTeachersProcessingId.set(null),
+    });
+  }
+
+  fetchReports(): void {
+    this.reportsLoading.set(true);
+    this.reportsError.set(null);
+
+    this.adminService.getOpenReports().subscribe({
+      next: (res) => {
+        this.reports.set(res.items);
+        this.reportsLoading.set(false);
+      },
+      error: () => {
+        this.reportsError.set('No se pudieron cargar los reportes');
+        this.reportsLoading.set(false);
+      },
+    });
+  }
+
+  dismissReport(report: OpenReport): void {
+    this.reportsProcessingId.set(report.id);
+    this.adminService.dismissReport(report.id).subscribe({
+      next: () => {
+        this.reports.update((list) => list.filter((x) => x.id !== report.id));
+        this.reportsProcessingId.set(null);
+      },
+      error: () => this.reportsProcessingId.set(null),
+    });
+  }
+
+  deleteReportedExam(report: OpenReport): void {
+    if (
+      !confirm(`¿Eliminar el relato de "${report.subject_name}"? Vas a poder restaurarlo después desde la papelera.`)
+    ) {
+      return;
+    }
+
+    this.reportsProcessingId.set(report.id);
+    this.adminService.deleteExam(report.exam_id).subscribe({
+      next: () => {
+        this.reports.update((list) => list.filter((x) => x.exam_id !== report.exam_id));
+        this.reportsProcessingId.set(null);
+      },
+      error: () => this.reportsProcessingId.set(null),
     });
   }
 }

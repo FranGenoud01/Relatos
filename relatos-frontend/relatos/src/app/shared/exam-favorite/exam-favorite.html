@@ -1,0 +1,5 @@
+<button mat-icon-button (click)="toggle()" [disabled]="!currentUser() || loading()"
+  [matTooltip]="currentUser() ? (isFavorite() ? 'Quitar de favoritos' : 'Guardar en favoritos') : 'Iniciá sesión para guardar favoritos'"
+  [attr.aria-label]="isFavorite() ? 'Quitar de favoritos' : 'Guardar en favoritos'">
+  <mat-icon [class.filled]="isFavorite()">{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+</button>

@@ -63,6 +63,7 @@ export class ShellComponent {
 
     const links = [
       ...this.baseNavLinks,
+      { path: '/favoritos', label: 'Favoritos', icon: 'favorite' },
       { path: '/mis-aportes', label: 'Mis aportes', icon: 'folder_shared' },
     ];
 

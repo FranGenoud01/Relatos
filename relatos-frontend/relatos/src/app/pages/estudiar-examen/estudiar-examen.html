@@ -72,9 +72,14 @@
       <mat-icon class="tiny-icon">person</mat-icon>
       <span class="teachers-text">Profesores: {{ currentExam.teachers || 'No registrados' }}</span>
       <span class="spacer"></span>
+      <app-exam-favorite [examId]="currentExam.id" />
       <button mat-icon-button (click)="copyText(currentExam.text)" matTooltip="Copiar relato"
         aria-label="Copiar relato al portapapeles">
         <mat-icon>content_copy</mat-icon>
+      </button>
+      <button mat-icon-button (click)="reportExam(currentExam.id)" matTooltip="Reportar relato"
+        aria-label="Reportar relato">
+        <mat-icon>flag</mat-icon>
       </button>
     </mat-card-footer>
   </mat-card>

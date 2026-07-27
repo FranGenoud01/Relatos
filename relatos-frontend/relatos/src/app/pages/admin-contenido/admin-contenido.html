@@ -2,6 +2,47 @@
   subtitle="Eliminá relatos o profesores y restauralos desde la papelera si te equivocaste." />
 
 <mat-tab-group>
+  <mat-tab [label]="'Reportes' + (reports().length > 0 ? ' (' + reports().length + ')' : '')">
+    <div class="tab-body">
+      <div class="loading-container" *ngIf="reportsLoading()">
+        <mat-spinner diameter="32"></mat-spinner>
+      </div>
+
+      <div class="message-container error" *ngIf="reportsError()">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ reportsError() }}</span>
+      </div>
+
+      <p class="empty-state" *ngIf="!reportsLoading() && !reportsError() && reports().length === 0">
+        No hay reportes pendientes de revisión.
+      </p>
+
+      <mat-card class="item-row" *ngFor="let report of reports()">
+        <div class="item-info">
+          <strong>{{ report.subject_name }}</strong>
+          <span class="item-meta">
+            {{ reasonLabels[report.reason] }} · Reportado por {{ report.reporter_name }}
+            · {{ report.created_at | date: 'medium' }}
+          </span>
+          <p class="item-text">{{ report.exam_text }}</p>
+          <p class="item-comment" *ngIf="report.comment">"{{ report.comment }}"</p>
+        </div>
+        <div class="item-actions">
+          <button mat-stroked-button (click)="dismissReport(report)"
+            [disabled]="reportsProcessingId() === report.id">
+            <mat-icon>check</mat-icon>
+            Descartar
+          </button>
+          <button mat-stroked-button color="warn" (click)="deleteReportedExam(report)"
+            [disabled]="reportsProcessingId() === report.id">
+            <mat-icon>delete</mat-icon>
+            Eliminar relato
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </mat-tab>
+
   <mat-tab label="Relatos">
     <div class="tab-body">
       <mat-button-toggle-group [value]="examsView()" (change)="setExamsView($event.value)">

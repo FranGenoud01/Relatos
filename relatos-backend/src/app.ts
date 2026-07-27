@@ -8,6 +8,8 @@ import { ratingRouter } from './modules/rating/rating.routes';
 import { commentRouter } from './modules/comment/comment.routes';
 import { statsRouter } from './modules/stats/stats.routes';
 import { adminRouter } from './modules/admin/admin.routes';
+import { favoriteRouter, myFavoritesRouter } from './modules/favorite/favorite.routes';
+import { reportRouter } from './modules/report/report.routes';
 
 const app = express();
 
@@ -25,6 +27,9 @@ app.use('/teachers', teacherRouter);
 app.use('/exams', examRouter);
 app.use('/exams/:examId/ratings', ratingRouter);
 app.use('/exams/:examId/comments', commentRouter);
+app.use('/exams/:examId/favorite', favoriteRouter);
+app.use('/exams/:examId/report', reportRouter);
+app.use('/favorites', myFavoritesRouter);
 app.use('/stats', statsRouter);
 app.use('/admin', adminRouter);
 

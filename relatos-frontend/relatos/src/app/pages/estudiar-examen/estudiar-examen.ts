@@ -24,7 +24,11 @@ import { SubjectService } from '../../core/services/subject.service';
 import { TeacherService } from '../../core/services/teacher.service';
 import { ExamService } from '../../core/services/exam.service';
 import { ExamRatingComponent } from '../../shared/exam-rating/exam-rating';
+import { ExamFavoriteComponent } from '../../shared/exam-favorite/exam-favorite';
 import { PageHeaderComponent } from '../../shared/page-header/page-header';
+import { MatDialog } from '@angular/material/dialog';
+import { ReportDialogComponent } from '../../shared/report-dialog/report-dialog';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-estudiar-examen',
@@ -41,6 +45,7 @@ import { PageHeaderComponent } from '../../shared/page-header/page-header';
     MatTooltipModule,
     NgxMatSelectSearchModule, // 2. AGREGAR A LOS IMPORTS
     ExamRatingComponent,
+    ExamFavoriteComponent,
     PageHeaderComponent,
   ],
   templateUrl: './estudiar-examen.html',
@@ -69,7 +74,9 @@ export class EstudiarExamenComponent implements OnInit {
     private subjectService: SubjectService,
     private teacherService: TeacherService,
     private examService: ExamService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -171,5 +178,21 @@ export class EstudiarExamenComponent implements OnInit {
     navigator.clipboard.writeText(text).then(() => {
       this.snackBar.open('Relato copiado al portapapeles', 'Cerrar', { duration: 2500 });
     });
+  }
+
+  reportExam(examId: number): void {
+    if (!this.auth.currentUser) {
+      this.snackBar.open('Iniciá sesión para reportar un relato', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    this.dialog
+      .open(ReportDialogComponent, { data: { examId }, width: '420px' })
+      .afterClosed()
+      .subscribe((sent) => {
+        if (sent) {
+          this.snackBar.open('Gracias, vamos a revisar tu reporte', 'Cerrar', { duration: 3000 });
+        }
+      });
   }
 }

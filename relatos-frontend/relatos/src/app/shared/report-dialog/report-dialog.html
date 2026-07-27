@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Reportar relato</h2>
+
+<mat-dialog-content>
+  <p class="hint">Contanos qué está mal con este relato para que un admin lo revise.</p>
+
+  <mat-radio-group [formControl]="reasonCtrl" class="reason-group">
+    <mat-radio-button *ngFor="let opt of reasonOptions" [value]="opt.value">
+      {{ opt.label }}
+    </mat-radio-button>
+  </mat-radio-group>
+
+  <mat-form-field appearance="outline" class="comment-field">
+    <mat-label>{{ commentRequired ? 'Contanos qué pasó' : 'Comentario (opcional)' }}</mat-label>
+    <textarea matInput [formControl]="commentCtrl" rows="3"></textarea>
+  </mat-form-field>
+
+  <p class="error" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="cancel()" [disabled]="submitting()">Cancelar</button>
+  <button mat-raised-button color="warn" (click)="submit()" [disabled]="submitting()">
+    @if (submitting()) {
+      <mat-spinner diameter="18"></mat-spinner>
+    } @else {
+      Enviar reporte
+    }
+  </button>
+</mat-dialog-actions>
