@@ -78,7 +78,7 @@ export class ShellComponent {
   });
 
   readonly isMobile$: Observable<boolean> = this.breakpointObserver
-    .observe(['(max-width: 600px)'])
+    .observe(['(max-width: 900px)'])
     .pipe(map((state) => state.matches));
 
   logout(): void {
