@@ -16,9 +16,14 @@ export class AuthService {
   private readonly currentUserSubject = new BehaviorSubject<User | null>(null);
   readonly currentUser$ = this.currentUserSubject.asObservable();
 
+  private readonly readySubject = new BehaviorSubject<boolean>(false);
+  readonly ready$ = this.readySubject.asObservable();
+
   constructor() {
     if (this.isBrowser && this.getToken()) {
       this.restoreSession();
+    } else {
+      this.readySubject.next(true);
     }
   }
 
@@ -51,8 +56,14 @@ export class AuthService {
 
   private restoreSession(): void {
     this.http.get<User>(`${API_BASE_URL}/auth/me`).subscribe({
-      next: (user) => this.currentUserSubject.next(user),
-      error: () => this.logout(),
+      next: (user) => {
+        this.currentUserSubject.next(user);
+        this.readySubject.next(true);
+      },
+      error: () => {
+        this.logout();
+        this.readySubject.next(true);
+      },
     });
   }
 

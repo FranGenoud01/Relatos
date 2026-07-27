@@ -271,6 +271,10 @@ export class AdminContenidoComponent implements OnInit {
     this.adminService.deleteExam(report.exam_id).subscribe({
       next: () => {
         this.reports.update((list) => list.filter((x) => x.exam_id !== report.exam_id));
+        if (this.exams().some((x) => x.id === report.exam_id)) {
+          this.exams.update((list) => list.filter((x) => x.id !== report.exam_id));
+          this.examsTotal.update((t) => t - 1);
+        }
         this.reportsProcessingId.set(null);
       },
       error: () => this.reportsProcessingId.set(null),
